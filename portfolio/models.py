@@ -74,3 +74,18 @@ class Formacao(models.Model):
 
     def __str__(self):
         return f'{self.designacao} - {self.instituicao}'
+
+class Projeto(models.Model):
+    titulo = models.CharField(max_length=200)
+    descricao = models.TextField()
+    conceitos_aplicados = models.TextField()
+    imagem = models.ImageField(upload_to='projetos/')
+    video_demo = models.URLField(blank=True, null=True)
+    link_github = models.URLField(blank=True, null=True)
+    
+    uc = models.ForeignKey(UnidadeCurricular, on_delete=models.SET_NULL, null=True, blank=True, related_name='projetos')
+    tecnologias = models.ManyToManyField(Tecnologia, related_name='projetos')
+    competencias = models.ManyToManyField(Competencia, blank=True, related_name='projetos')
+
+    def __str__(self):
+        return self.titulo
