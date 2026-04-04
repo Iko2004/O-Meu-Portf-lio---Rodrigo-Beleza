@@ -42,3 +42,21 @@ class Tecnologia(models.Model):
 
     def __str__(self):
         return self.nome
+
+class Competencia(models.Model):
+    CATEGORIA_CHOICES = [
+        ('Soft', 'Soft Skill'),
+        ('Hard', 'Hard Skill'),
+    ]
+    NIVEL_CHOICES = [
+        ('Iniciante', 'Iniciante'),
+        ('Intermédio', 'Intermédio'),
+        ('Avançado', 'Avançado'),
+    ]
+    
+    nome = models.CharField(max_length=100)
+    categoria = models.CharField(max_length=10, choices=CATEGORIA_CHOICES)
+    nivel = models.CharField(max_length=20, choices=NIVEL_CHOICES)
+
+    def __str__(self):
+        return f'{self.nome} ({self.nivel})'
