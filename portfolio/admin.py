@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 from .models import (
-     Licenciatura, Professor, UnidadeCurricular, Tecnologia, Competencia
+     Licenciatura, Professor, UnidadeCurricular, Tecnologia, Competencia, Formacao
 )
 
 @admin.register(Licenciatura)
@@ -31,3 +31,9 @@ class CompetenciaAdmin(admin.ModelAdmin):
     list_display = ('nome', 'categoria', 'nivel')
     list_filter = ('categoria', 'nivel')
     search_fields = ('nome',)
+
+@admin.register(Formacao)
+class FormacaoAdmin(admin.ModelAdmin):
+    list_display = ('designacao', 'instituicao', 'data_inicio', 'data_fim')
+    list_filter = ('instituicao', 'data_inicio')
+    search_fields = ('designacao', 'instituicao')
