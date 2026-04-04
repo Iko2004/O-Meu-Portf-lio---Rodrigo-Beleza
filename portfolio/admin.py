@@ -13,3 +13,5 @@ class LicenciaturaAdmin(admin.ModelAdmin):
 class ProfessorAdmin(admin.ModelAdmin):
     list_display = ('nome', 'numero', 'email')
     search_fields = ('nome', 'numero', 'email')
+
+
