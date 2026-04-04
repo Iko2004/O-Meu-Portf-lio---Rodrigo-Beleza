@@ -60,3 +60,17 @@ class Competencia(models.Model):
 
     def __str__(self):
         return f'{self.nome} ({self.nivel})'
+
+class Formacao(models.Model):
+    designacao = models.CharField(max_length=200)
+    instituicao = models.CharField(max_length=200)
+    data_inicio = models.DateField()
+    data_fim = models.DateField(blank=True, null=True)
+    descricao = models.TextField()
+    competencias_adquiridas = models.ManyToManyField(Competencia, blank=True, related_name='formacoes')
+
+    class Meta:
+        ordering = ['-data_inicio']
+
+    def __str__(self):
+        return f'{self.designacao} - {self.instituicao}'
