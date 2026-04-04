@@ -30,3 +30,15 @@ class UnidadeCurricular(models.Model):
 
     def __str__(self):
         return f'{self.nome} ({self.ano}º Ano)'
+
+class Tecnologia(models.Model):
+    NIVEL_CHOICES = [(i, str(i)) for i in range(1, 6)]
+    
+    nome = models.CharField(max_length=100)
+    logo = models.ImageField(upload_to='tecnologias/')
+    link_oficial = models.URLField()
+    detalhes = models.TextField()
+    nivel_interesse = models.IntegerField(choices=NIVEL_CHOICES)
+
+    def __str__(self):
+        return self.nome
