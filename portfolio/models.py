@@ -100,3 +100,30 @@ class TFC(models.Model):
 
     def __str__(self):
         return f'{self.titulo} ({self.ano})'
+
+class MakingOf(models.Model):
+    ENTIDADES_CHOICES = [
+        ('Licenciatura', 'Licenciatura'),
+        ('UnidadeCurricular', 'Unidade Curricular'),
+        ('Projeto', 'Projeto'),
+        ('Tecnologia', 'Tecnologia'),
+        ('Competencia', 'Competência'),
+        ('Formacao', 'Formação'),
+        ('TFC', 'TFC'),
+        ('Geral', 'Geral / Arquitetura do Projeto'),
+    ]
+
+    titulo = models.CharField(max_length=200)
+    entidade_relacionada = models.CharField(max_length=50, choices=ENTIDADES_CHOICES, default='Geral')
+    fotografia_caderno = models.ImageField(upload_to='makingof/', blank=True, null=True)
+    descricao_decisoes = models.TextField(blank=True)
+    justificacao_modelacao = models.TextField(blank=True)
+    erros_correcoes = models.TextField(blank=True)
+    uso_ia = models.TextField(blank=True)
+    data_registo = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['data_registo']
+
+    def __str__(self):
+        return f'{self.titulo} ({self.entidade_relacionada})'
