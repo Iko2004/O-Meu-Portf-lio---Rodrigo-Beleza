@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 from .models import (
-     Licenciatura, Professor, UnidadeCurricular, Tecnologia, Competencia, Formacao, Projeto, TFC
+     Licenciatura, Professor, UnidadeCurricular, Tecnologia, Competencia, Formacao, Projeto, TFC, MakingOf
 )
 
 @admin.register(Licenciatura)
@@ -49,3 +49,9 @@ class TFCAdmin(admin.ModelAdmin):
     list_display = ('titulo', 'autores', 'ano', 'destaque')
     list_filter = ('ano', 'destaque')
     search_fields = ('titulo', 'autores')
+
+@admin.register(MakingOf)
+class MakingOfAdmin(admin.ModelAdmin):
+    list_display = ('titulo', 'entidade_relacionada', 'data_registo')
+    list_filter = ('entidade_relacionada', 'data_registo')
+    search_fields = ('titulo', 'descricao_decisoes', 'erros_correcoes')
