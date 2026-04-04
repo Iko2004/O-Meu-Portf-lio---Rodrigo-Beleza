@@ -89,3 +89,14 @@ class Projeto(models.Model):
 
     def __str__(self):
         return self.titulo
+
+class TFC(models.Model):
+    titulo = models.CharField(max_length=300)
+    autores = models.CharField(max_length=300)
+    resumo = models.TextField()
+    ano = models.IntegerField(default=2025)
+    link_documento = models.URLField(blank=True, null=True)
+    destaque = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f'{self.titulo} ({self.ano})'
