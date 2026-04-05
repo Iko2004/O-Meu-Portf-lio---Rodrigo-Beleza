@@ -93,6 +93,7 @@ class Projeto(models.Model):
 class TFC(models.Model):
     titulo = models.CharField(max_length=300)
     autores = models.CharField(max_length=300)
+    orientador = models.CharField(max_length=200, blank=True, null=True)
     resumo = models.TextField()
     ano = models.IntegerField(default=2025)
     link_documento = models.URLField(blank=True, null=True)
