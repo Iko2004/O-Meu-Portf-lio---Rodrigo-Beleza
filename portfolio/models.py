@@ -22,7 +22,7 @@ class Professor(models.Model):
 class UnidadeCurricular(models.Model):
     nome = models.CharField(max_length=200)
     ano = models.IntegerField()
-    semestre = models.IntegerField()
+    semestre = models.CharField(max_length=200)
     ects = models.IntegerField()
     imagem = models.ImageField(upload_to='ucs/')
     licenciatura = models.ForeignKey(Licenciatura, on_delete=models.CASCADE, related_name='ucs')
