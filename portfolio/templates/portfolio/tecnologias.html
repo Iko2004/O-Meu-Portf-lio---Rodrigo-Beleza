@@ -1,0 +1,145 @@
+{% extends 'portfolio/base.html' %}
+
+{% block content %}
+<style>
+    .btn-add-header {
+        width: 55px;
+        height: 55px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 10px 25px rgba(13, 110, 253, 0.3);
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .btn-add-header:hover { 
+        transform: scale(1.15) rotate(90deg); 
+        box-shadow: 0 15px 30px rgba(13, 110, 253, 0.5);
+    }
+
+
+    .tech-card {
+        transition: all 0.4s ease;
+        background: #ffffff;
+        border: 1px solid rgba(0,0,0,0.02);
+    }
+    .tech-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.08) !important;
+    }
+
+    /* Botões de Ação CRUD no Card */
+    .action-btn {
+        width: 42px;
+        height: 42px;
+        border-radius: 14px; /* Quadrado com cantos bem redondos */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+        border: none;
+        background: #f8f9fa;
+        color: #6c757d;
+        text-decoration: none;
+    }
+    .btn-edit:hover { background: #e7f0ff; color: #0d6efd; transform: scale(1.1); }
+    .btn-delete:hover { background: #ffe7e7; color: #dc3545; transform: scale(1.1); }
+    
+    /* Círculo decorativo para o ícone genérico */
+    .tech-icon-circle {
+        width: 50px;
+        height: 50px;
+        background: rgba(13, 110, 253, 0.1);
+        color: #0d6efd;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+    }
+</style>
+
+<div class="container py-5">
+    
+    <div class="d-flex justify-content-between align-items-end mb-5 border-bottom pb-4">
+        <div>
+            <h6 class="text-primary fw-bold text-uppercase ls-2 mb-2">Competências</h6>
+            <h1 class="display-4 fw-bold mb-0">Tecnologias</h1>
+        </div>
+        
+        <button class="btn btn-primary btn-add-float" data-bs-toggle="modal" data-bs-target="#modalAdd" title="Adicionar Tecnologia">
+            <i class="bi bi-plus-lg fs-3"></i>
+        </button>
+    </div>
+
+    <div class="row g-4">
+        {% for tecnologia in tecnologias %}
+        <div class="col-md-6 col-lg-4">
+            <div class="card tech-card shadow-sm rounded-5 p-4">
+                <div class="card-body">
+                    
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div class="d-flex align-items-center">
+                            <div class="tech-icon-circle me-3">
+                                <i class="bi bi-cpu"></i>
+                            </div>
+                            <h3 class="h4 fw-bold mb-0">{{ tecnologia.nome }}</h3>
+                        </div>
+                    </div>
+                    
+                    <hr class="opacity-10 my-3">
+                    
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="badge bg-light text-secondary rounded-pill px-3 py-2 border">
+                            ID: #{{ tecnologia.id }}
+                        </span>
+                        
+                        <div class="d-flex gap-2">
+                            <a href="{% url 'editar_tecnologia' tecnologia.id %}" class="action-btn btn-edit shadow-sm" title="Editar">
+                                <i class="bi bi-pencil-fill"></i>
+                            </a>
+                            <a href="{% url 'eliminar_tecnologia' tecnologia.id %}" class="action-btn btn-delete shadow-sm" title="Eliminar" onclick="return confirm('Tens a certeza que queres apagar {{ tecnologia.nome }}?');">
+                                <i class="bi bi-trash3-fill"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12 text-center py-5">
+            <div class="p-5 bg-light rounded-5 text-muted shadow-sm border">
+                <i class="bi bi-cpu-fill fs-1 mb-3 text-secondary opacity-50"></i>
+                <h5 class="fw-bold">Nenhuma tecnologia encontrada</h5>
+                <p>Clica no botão azul flutuante no canto inferior direito para adicionar a tua primeira tecnologia.</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<div class="modal fade" id="modalAdd" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content rounded-5 border-0 shadow-lg p-3">
+            <div class="modal-header border-0 pb-0">
+                <h5 class="modal-title fw-bold fs-4">Nova Tecnologia</h5>
+                <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal"></button>
+            </div>
+            
+            <form method="POST" action="{% url 'tecnologias' %}">
+                {% csrf_token %}
+                <div class="modal-body py-4">
+                    <label class="form-label small fw-bold text-muted ms-2">Nome da Tecnologia</label>
+                    <input type="text" name="nome" class="form-control form-control-lg rounded-pill px-4 bg-light border-0" placeholder="Ex: React, AWS, Docker" required>
+                </div>
+                <div class="modal-footer border-0 pt-0">
+                    <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary rounded-pill px-4 shadow-sm">Adicionar à BD</button>
+                </div>
+            </form>
+            
+        </div>
+    </div>
+</div>
+{% endblock %}

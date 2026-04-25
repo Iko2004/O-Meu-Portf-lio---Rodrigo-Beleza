@@ -10,8 +10,8 @@
                     Estudante de Engenharia Informática apaixonado por desenvolvimento web, bases de dados e resolução de problemas complexos. Bem-vindo ao meu espaço digital.
                 </p>
                 <div class="d-grid gap-2 d-md-flex justify-content-md-start">
-                    <a href="#" class="btn btn-primary btn-lg px-4 me-md-2 rounded-pill">Ver Projetos</a>
-                    <a href="#" class="btn btn-outline-secondary btn-lg px-4 rounded-pill">Contactar</a>
+                    <a href="{% url 'projetos' %}" class="btn btn-primary btn-lg px-4 me-md-2 rounded-pill">Ver Projetos</a>
+                    <a href="{% url 'contactos' %}" class="btn btn-outline-secondary btn-lg px-4 rounded-pill">Contactar</a>
                 </div>
             </div>
             <div class="col-lg-6 text-center mt-5 mt-lg-0">
@@ -25,43 +25,78 @@
     .feature-card { transition: transform 0.3s ease, box-shadow 0.3s ease; }
     .feature-card:hover { transform: translateY(-10px); box-shadow: 0 1rem 3rem rgba(0,0,0,.1) !important; }
     .icon-box { width: 80px; height: 80px; display: flex; align-items: center; justify-content: center; }
+    .card-link { display: block; text-decoration: none; height: 100%; color: inherit; }
 </style>
 
 <section class="container py-5 mt-5">
-    <div class="row text-center g-5">
-        <div class="col-md-4">
-            <div class="card h-100 border-0 rounded-5 shadow p-5 feature-card bg-white">
-                <div class="card-body d-flex flex-column align-items-center">
-                    <div class="icon-box bg-light rounded-circle mb-4">
-                        <i class="bi bi-code-slash fs-1 text-primary"></i>
+    <div class="row text-center g-4"> 
+        
+        <div class="col-4"> 
+            <a href="{% url 'tecnologias' %}" class="card-link">
+                <div class="card h-100 border-0 rounded-5 shadow p-4 p-lg-5 feature-card bg-white">
+                    <div class="card-body d-flex flex-column align-items-center text-center">
+                        <div class="icon-box bg-light rounded-circle mb-4">
+                            <i class="bi bi-code-slash fs-1 text-primary"></i>
+                        </div>
+                        <h4 class="card-title fw-bold text-dark h5 h4-lg">Tecnologias</h4>
+                        <p class="card-text text-muted small d-none d-lg-block">Explora a minha stack tecnológica. Do front-end ao back-end, incluindo Python, Django e bases de dados.</p>
+                        <p class="card-text text-muted small d-lg-none">Stack técnica completa.</p> 
                     </div>
-                    <h4 class="card-title fw-bold text-dark">Tecnologias</h4>
-                    <p class="card-text text-muted">Explora a minha stack tecnológica. Do front-end ao back-end, incluindo Python, Django, HTML, CSS e bases de dados.</p>
                 </div>
+            </a>
+        </div>
+        
+        <div class="col-4"> 
+            <a href="{% url 'percurso' %}" class="card-link">
+                <div class="card h-100 border-0 rounded-5 shadow p-4 p-lg-5 feature-card bg-white">
+                    <div class="card-body d-flex flex-column align-items-center text-center">
+                        <div class="icon-box bg-light rounded-circle mb-4">
+                            <i class="bi bi-mortarboard fs-1 text-primary"></i>
+                        </div>
+                        <h4 class="card-title fw-bold text-dark h5 h4-lg">Percurso Académico</h4>
+                        <p class="card-text text-muted small d-none d-lg-block">Consulta as minhas formações, licenciaturas e unidades curriculares que moldaram o meu conhecimento.</p>
+                        <p class="card-text text-muted small d-lg-none">Formação académica técnica.</p> 
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-lg-4 mb-4">
+    <a href="{% url 'competencias' %}" class="card-link">
+        <div class="card h-100 border-0 rounded-5 shadow p-4 p-lg-5 feature-card bg-white">
+            <div class="card-body d-flex flex-column align-items-center text-center">
+                <div class="icon-box bg-light rounded-circle mb-4">
+                    <i class="bi bi-award fs-1 text-primary"></i>
+                </div>
+                
+                <h4 class="card-title fw-bold text-dark h5 h4-lg">Competências</h4>
+                
+                <p class="card-text text-muted small d-none d-lg-block">
+                    Explora a minha stack tecnológica, linguagens de programação e níveis de domínio técnico.
+                </p>
+                <p class="card-text text-muted small d-lg-none">
+                    Stack técnica e proficiência.
+                </p> 
             </div>
         </div>
-        <div class="col-md-4">
-            <div class="card h-100 border-0 rounded-5 shadow p-5 feature-card bg-white">
-                <div class="card-body d-flex flex-column align-items-center">
-                    <div class="icon-box bg-light rounded-circle mb-4">
-                        <i class="bi bi-mortarboard fs-1 text-primary"></i>
+    </a>
+</div>
+        
+        <div class="col-4"> 
+            <a href="{% url 'makingofs' %}" class="card-link">
+                <div class="card h-100 border-0 rounded-5 shadow p-4 p-lg-5 feature-card bg-white">
+                    <div class="card-body d-flex flex-column align-items-center text-center">
+                        <div class="icon-box bg-light rounded-circle mb-4">
+                            <i class="bi bi-journal-code fs-1 text-primary"></i>
+                        </div>
+                        <h4 class="card-title fw-bold text-dark h5 h4-lg">Making Ofs</h4>
+                        <p class="card-text text-muted small d-none d-lg-block">Acompanha os bastidores, os erros superados e a evolução da arquitetura deste projeto.</p>
+                        <p class="card-text text-muted small d-lg-none">Bastidores e arquitetura.</p> 
                     </div>
-                    <h4 class="card-title fw-bold text-dark">Percurso Académico</h4>
-                    <p class="card-text text-muted">Consulta as minhas formações, licenciaturas e unidades curriculares que moldaram o meu conhecimento.</p>
                 </div>
-            </div>
+            </a>
         </div>
-        <div class="col-md-4">
-            <div class="card h-100 border-0 rounded-5 shadow p-5 feature-card bg-white">
-                <div class="card-body d-flex flex-column align-items-center">
-                    <div class="icon-box bg-light rounded-circle mb-4">
-                        <i class="bi bi-journal-code fs-1 text-primary"></i>
-                    </div>
-                    <h4 class="card-title fw-bold text-dark">Making Ofs</h4>
-                    <p class="card-text text-muted">Acompanha os bastidores, os erros superados e a evolução da arquitetura deste projeto.</p>
-                </div>
-            </div>
-        </div>
+        
     </div>
 </section>
 {% endblock %}

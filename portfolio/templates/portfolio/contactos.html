@@ -1,0 +1,120 @@
+{% extends 'portfolio/base.html' %}
+
+{% block content %}
+<style>
+    .contact-wrapper {
+        min-height: 85vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: radial-gradient(circle at 15% 15%, rgba(13, 110, 253, 0.05) 0%, transparent 45%),
+                    radial-gradient(circle at 85% 85%, rgba(13, 110, 253, 0.05) 0%, transparent 45%);
+    }
+
+    .contact-card {
+        background: rgba(255, 255, 255, 0.85);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        max-width: 950px;
+        width: 100%;
+        overflow: hidden;
+    }
+
+    .form-control {
+        border-radius: 25px;
+        padding: 14px 24px;
+        border: 1px solid #e9ecef;
+        background: rgba(255, 255, 255, 0.6);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .form-control:focus {
+        box-shadow: 0 10px 30px rgba(13, 110, 253, 0.08);
+        border-color: #0d6efd;
+        background: #fff;
+        transform: translateY(-2px);
+    }
+
+    .social-btn {
+        width: 65px;
+        height: 65px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        font-size: 1.6rem;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        background: #fdfdfd;
+        color: #212529;
+        text-decoration: none;
+        border: 1px solid #eee;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.03);
+    }
+
+    .social-btn:hover {
+        transform: scale(1.15) rotate(5deg);
+        background: #0d6efd;
+        color: white;
+        box-shadow: 0 15px 30px rgba(13, 110, 253, 0.25);
+        border-color: #0d6efd;
+    }
+</style>
+
+<div class="contact-wrapper">
+    <div class="container py-5">
+        <div class="card contact-card shadow-lg rounded-5 p-4 p-md-5 mx-auto">
+            <div class="row g-5">
+                
+                <div class="col-lg-5 border-end d-flex flex-column justify-content-center pe-lg-5">
+                    <h6 class="text-primary fw-bold text-uppercase ls-2 mb-3">Conectar</h6>
+                    <h1 class="display-5 fw-bold mb-4">Fala comigo.</h1>
+                    <p class="text-muted mb-5 fs-5">
+                        Estou disponível para novos desafios técnicos e colaborações em projetos de engenharia.
+                    </p>
+                    
+                    <div class="mb-5">
+                        <p class="mb-1 small fw-bold text-uppercase text-muted ls-1">Email Direto</p>
+                        <a href="mailto:rodrigo.beleza04@gmail.com" class="text-decoration-none text-primary fs-5 fw-bold text-break">rodrigo.beleza04@gmail.com</a>
+                    </div>
+
+                    <div class="d-flex gap-4 mt-2">
+                        <a href="https://www.linkedin.com/in/rodrigo-beleza-76bb8535a/" target="_blank" class="social-btn" title="LinkedIn">
+                            <i class="bi bi-linkedin"></i>
+                        </a>
+                        <a href="https://github.com/RodrigoBeleza10?tab=repositories" target="_blank" class="social-btn" title="GitHub">
+                            <i class="bi bi-github"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="col-lg-7 ps-lg-5">
+                    <form action="#" method="POST">
+                        {% csrf_token %}
+                        <div class="row g-4">
+                            <div class="col-md-6">
+                                <label class="form-label ps-3 small fw-bold text-muted">Nome</label>
+                                <input type="text" class="form-control" placeholder="Ex: João Silva">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label ps-3 small fw-bold text-muted">Email</label>
+                                <input type="email" class="form-control" placeholder="teu@email.com">
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label ps-3 small fw-bold text-muted">Mensagem</label>
+                                <textarea class="form-control" rows="5" placeholder="Como posso ajudar no teu projeto?"></textarea>
+                            </div>
+                            <div class="col-12 mt-4 text-end">
+                                <button type="submit" class="btn btn-primary btn-lg px-5 rounded-pill shadow-sm transition-all">
+                                    Enviar Mensagem <i class="bi bi-send-fill ms-2"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
