@@ -1,0 +1,67 @@
+{% extends 'portfolio/base.html' %}
+
+{% block content %}
+<section class="bg-white text-dark py-5 shadow-sm">
+    <div class="container my-5">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h1 class="display-4 fw-bold mb-3">Olá, eu sou o Rodrigo Beleza.</h1>
+                <p class="lead text-muted mb-4">
+                    Estudante de Engenharia Informática apaixonado por desenvolvimento web, bases de dados e resolução de problemas complexos. Bem-vindo ao meu espaço digital.
+                </p>
+                <div class="d-grid gap-2 d-md-flex justify-content-md-start">
+                    <a href="#" class="btn btn-primary btn-lg px-4 me-md-2 rounded-pill">Ver Projetos</a>
+                    <a href="#" class="btn btn-outline-secondary btn-lg px-4 rounded-pill">Contactar</a>
+                </div>
+            </div>
+            <div class="col-lg-6 text-center mt-5 mt-lg-0">
+                <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Programação" class="img-fluid rounded-5 shadow-lg" style="max-height: 400px; object-fit: cover;">
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    .feature-card { transition: transform 0.3s ease, box-shadow 0.3s ease; }
+    .feature-card:hover { transform: translateY(-10px); box-shadow: 0 1rem 3rem rgba(0,0,0,.1) !important; }
+    .icon-box { width: 80px; height: 80px; display: flex; align-items: center; justify-content: center; }
+</style>
+
+<section class="container py-5 mt-5">
+    <div class="row text-center g-5">
+        <div class="col-md-4">
+            <div class="card h-100 border-0 rounded-5 shadow p-5 feature-card bg-white">
+                <div class="card-body d-flex flex-column align-items-center">
+                    <div class="icon-box bg-light rounded-circle mb-4">
+                        <i class="bi bi-code-slash fs-1 text-primary"></i>
+                    </div>
+                    <h4 class="card-title fw-bold text-dark">Tecnologias</h4>
+                    <p class="card-text text-muted">Explora a minha stack tecnológica. Do front-end ao back-end, incluindo Python, Django, HTML, CSS e bases de dados.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100 border-0 rounded-5 shadow p-5 feature-card bg-white">
+                <div class="card-body d-flex flex-column align-items-center">
+                    <div class="icon-box bg-light rounded-circle mb-4">
+                        <i class="bi bi-mortarboard fs-1 text-primary"></i>
+                    </div>
+                    <h4 class="card-title fw-bold text-dark">Percurso Académico</h4>
+                    <p class="card-text text-muted">Consulta as minhas formações, licenciaturas e unidades curriculares que moldaram o meu conhecimento.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100 border-0 rounded-5 shadow p-5 feature-card bg-white">
+                <div class="card-body d-flex flex-column align-items-center">
+                    <div class="icon-box bg-light rounded-circle mb-4">
+                        <i class="bi bi-journal-code fs-1 text-primary"></i>
+                    </div>
+                    <h4 class="card-title fw-bold text-dark">Making Ofs</h4>
+                    <p class="card-text text-muted">Acompanha os bastidores, os erros superados e a evolução da arquitetura deste projeto.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
