@@ -7,7 +7,7 @@
             <div class="col-lg-6">
                 <h1 class="display-4 fw-bold mb-3">Olá, eu sou o Rodrigo Beleza.</h1>
                 <p class="lead text-muted mb-4">
-                    Estudante de Engenharia Informática apaixonado por desenvolvimento web, bases de dados e resolução de problemas complexos. Bem-vindo ao meu espaço digital.
+                    Estudante de Informática de Gestão apaixonado pelas mais diversas tecnologias e resolução de problemas complexos. Bem-vindo ao meu espaço digital.
                 </p>
                 <div class="d-grid gap-2 d-md-flex justify-content-md-start">
                     <a href="{% url 'projetos' %}" class="btn btn-primary btn-lg px-4 me-md-2 rounded-pill">Ver Projetos</a>
@@ -15,8 +15,11 @@
                 </div>
             </div>
             <div class="col-lg-6 text-center mt-5 mt-lg-0">
-                <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Programação" class="img-fluid rounded-5 shadow-lg" style="max-height: 400px; object-fit: cover;">
-            </div>
+            <img src="/media/portfolio/Rodrigo.png" 
+                alt="Rodrigo Beleza" 
+                class="img-fluid rounded-5 shadow-lg" 
+                style="max-height: 400px; width: 100%; object-fit: cover;">
+        </div>
         </div>
     </div>
 </section>
@@ -31,7 +34,7 @@
 <section class="container py-5 mt-5">
     <div class="row text-center g-4"> 
         
-        <div class="col-4"> 
+        <div class="col-lg-4 mb-4"> 
             <a href="{% url 'tecnologias' %}" class="card-link">
                 <div class="card h-100 border-0 rounded-5 shadow p-4 p-lg-5 feature-card bg-white">
                     <div class="card-body d-flex flex-column align-items-center text-center">
@@ -46,7 +49,7 @@
             </a>
         </div>
         
-        <div class="col-4"> 
+        <div class="col-lg-4 mb-4"> 
             <a href="{% url 'percurso' %}" class="card-link">
                 <div class="card h-100 border-0 rounded-5 shadow p-4 p-lg-5 feature-card bg-white">
                     <div class="card-body d-flex flex-column align-items-center text-center">
@@ -62,27 +65,47 @@
         </div>
 
         <div class="col-lg-4 mb-4">
-    <a href="{% url 'competencias' %}" class="card-link">
-        <div class="card h-100 border-0 rounded-5 shadow p-4 p-lg-5 feature-card bg-white">
-            <div class="card-body d-flex flex-column align-items-center text-center">
-                <div class="icon-box bg-light rounded-circle mb-4">
-                    <i class="bi bi-award fs-1 text-primary"></i>
+            <a href="{% url 'competencias' %}" class="card-link">
+                <div class="card h-100 border-0 rounded-5 shadow p-4 p-lg-5 feature-card bg-white">
+                    <div class="card-body d-flex flex-column align-items-center text-center">
+                        <div class="icon-box bg-light rounded-circle mb-4">
+                            <i class="bi bi-award fs-1 text-primary"></i>
+                        </div>
+                        
+                        <h4 class="card-title fw-bold text-dark h5 h4-lg">Competências</h4>
+                        
+                        <p class="card-text text-muted small d-none d-lg-block">
+                            Explora a minha stack tecnológica, linguagens de programação e níveis de domínio técnico.
+                        </p>
+                        <p class="card-text text-muted small d-lg-none">
+                            Stack técnica e proficiência.
+                        </p> 
+                    </div>
                 </div>
-                
-                <h4 class="card-title fw-bold text-dark h5 h4-lg">Competências</h4>
-                
-                <p class="card-text text-muted small d-none d-lg-block">
-                    Explora a minha stack tecnológica, linguagens de programação e níveis de domínio técnico.
-                </p>
-                <p class="card-text text-muted small d-lg-none">
-                    Stack técnica e proficiência.
-                </p> 
-            </div>
+            </a>
         </div>
-    </a>
-</div>
+
+        <div class="col-lg-4 mb-4">
+            <a href="{% url 'sobre' %}" class="card-link">
+                <div class="card h-100 border-0 rounded-5 shadow p-4 p-lg-5 feature-card bg-white">
+                    <div class="card-body d-flex flex-column align-items-center text-center">
+                        <div class="icon-box bg-light rounded-circle mb-4">
+                            <i class="bi bi-layers fs-1 text-primary"></i>
+                        </div>
+                        
+                        <h4 class="card-title fw-bold text-dark h5 h4-lg">Sobre a Aplicação</h4>
+                        <p class="card-text text-muted small d-none d-lg-block">
+                            Exploração técnica, arquitetura MVT, modelação de dados e tecnologias usadas neste projeto.
+                        </p>
+                        <p class="card-text text-muted small d-lg-none">
+                            Arquitetura e tecnologias.
+                        </p>
+                    </div>
+                </div>
+            </a>
+        </div>
         
-        <div class="col-4"> 
+        <div class="col-lg-4 mb-4"> 
             <a href="{% url 'makingofs' %}" class="card-link">
                 <div class="card h-100 border-0 rounded-5 shadow p-4 p-lg-5 feature-card bg-white">
                     <div class="card-body d-flex flex-column align-items-center text-center">

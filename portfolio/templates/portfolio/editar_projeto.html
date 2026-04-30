@@ -1,0 +1,82 @@
+{% extends 'portfolio/base.html' %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            
+            <div class="card border-0 rounded-5 shadow-lg p-4 p-lg-5 bg-white">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2 class="fw-bold mb-0">Editar Projeto</h2>
+                    <a href="{% url 'projetos' %}" class="btn btn-light rounded-pill px-4">Voltar</a>
+                </div>
+
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label small fw-bold text-muted ms-2">Título do Projeto</label>
+                            <input type="text" name="titulo" value="{{ projeto.titulo }}" class="form-control form-control-lg rounded-pill bg-light border-0" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label small fw-bold text-muted ms-2">Unidade Curricular (UC)</label>
+                            <select name="uc" class="form-select form-select-lg rounded-pill bg-light border-0">
+                                <option value="">Nenhuma / Pessoal</option>
+                                {% for uc in todas_ucs %}
+                                    <option value="{{ uc.id }}" {% if projeto.uc and projeto.uc.id == uc.id %}selected{% endif %}>{{ uc.nome }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label small fw-bold text-muted ms-2">Link GitHub</label>
+                            <input type="url" name="link_github" value="{{ projeto.link_github }}" class="form-control form-control-lg rounded-pill bg-light border-0">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label small fw-bold text-muted ms-2">Vídeo Demo (URL)</label>
+                            <input type="url" name="video_demo" value="{{ projeto.video_demo|default:'' }}" class="form-control form-control-lg rounded-pill bg-light border-0">
+                        </div>
+
+                        <div class="col-12">
+                            <label class="form-label small fw-bold text-muted ms-2">Descrição</label>
+                            <textarea name="descricao" class="form-control rounded-4 p-3 bg-light border-0" rows="4" required>{{ projeto.descricao }}</textarea>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label small fw-bold text-muted ms-2">Conceitos Aplicados</label>
+                            <textarea name="conceitos_aplicados" class="form-control rounded-4 p-3 bg-light border-0" rows="3">{{ projeto.conceitos_aplicados }}</textarea>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label small fw-bold text-muted ms-2">Tecnologias (Ctrl+Clique para várias)</label>
+                            <select name="tecnologias" class="form-select rounded-4 bg-light border-0" multiple size="4">
+                                {% for tech in todas_tecnologias %}
+                                    <option value="{{ tech.id }}" {% if tech in projeto.tecnologias.all %}selected{% endif %}>{{ tech.nome }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label small fw-bold text-muted ms-2">Competências (Ctrl+Clique para várias)</label>
+                            <select name="competencias" class="form-select rounded-4 bg-light border-0" multiple size="4">
+                                {% for comp in todas_competencias %}
+                                    <option value="{{ comp.id }}" {% if comp in projeto.competencias.all %}selected{% endif %}>{{ comp.nome }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="col-12 mt-4">
+                            <label class="form-label small fw-bold text-muted ms-2">Imagem de Capa (Deixa em branco para manter a atual)</label>
+                            <input type="file" name="imagem" class="form-control form-control-lg rounded-pill bg-light border-0" accept="image/*">
+                        </div>
+
+                        <div class="col-12 mt-5 text-end">
+                            <button type="submit" class="btn btn-primary btn-lg rounded-pill px-5 shadow-sm">Guardar Alterações</button>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

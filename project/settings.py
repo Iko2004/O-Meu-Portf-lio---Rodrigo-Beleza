@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'portfolio',
     'escola',
     'professor',
+    'markdownify.apps.MarkdownifyConfig',
 ]
 
 MIDDLEWARE = [
@@ -128,3 +129,4 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # URL pública para aceder aos ficheiros
 MEDIA_URL = '/media/'
+

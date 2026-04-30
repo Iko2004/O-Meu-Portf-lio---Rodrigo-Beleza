@@ -2,116 +2,44 @@
 
 {% block content %}
 <style>
-    /* O TEU CSS ORIGINAL */
-    .timeline-container {
-        position: relative;
-        padding: 2rem 0;
-    }
+    .timeline-container { position: relative; padding: 2rem 0; }
     .timeline-container::before {
-        content: '';
-        position: absolute;
-        left: 50%;
-        top: 0;
-        bottom: 0;
-        width: 4px;
-        background: #dee2e6;
-        transform: translateX(-50%);
-        border-radius: 10px;
+        content: ''; position: absolute; left: 50%; top: 0; bottom: 0;
+        width: 4px; background: #dee2e6; transform: translateX(-50%); border-radius: 10px;
     }
-
-    .timeline-item {
-        position: relative;
-        margin-bottom: 4rem;
-        width: 100%;
-    }
-
+    .timeline-item { position: relative; margin-bottom: 4rem; width: 100%; }
     .timeline-dot {
-        position: absolute;
-        left: 50%;
-        top: 0;
-        width: 24px;
-        height: 24px;
-        background: #0d6efd;
-        border: 4px solid white;
-        border-radius: 50%;
-        transform: translate(-50%, 0);
-        box-shadow: 0 0 0 4px rgba(13, 110, 253, 0.2);
-        z-index: 2;
+        position: absolute; left: 50%; top: 0; width: 24px; height: 24px;
+        background: #0d6efd; border: 4px solid white; border-radius: 50%;
+        transform: translate(-50%, 0); box-shadow: 0 0 0 4px rgba(13, 110, 253, 0.2); z-index: 2;
     }
-
-    .journey-card {
-        transition: all 0.4s ease;
-        border: none;
-        background: white;
-        position: relative; /* Adicionado para posicionar os botões CRUD */
-    }
-
-    .journey-card:hover {
-        transform: scale(1.02);
-    }
-
+    .journey-card { transition: all 0.4s ease; border: none; background: white; position: relative; }
+    .journey-card:hover { transform: scale(1.02); }
+    
     .uc-badge {
-        background: #f8f9fa;
-        color: #495057;
-        padding: 8px 16px;
-        border-radius: 50px;
-        display: inline-block;
-        margin: 4px;
-        font-size: 0.85rem;
-        border: 1px solid #eee;
-        transition: all 0.3s;
+        background: #f8f9fa; color: #495057; padding: 8px 16px; border-radius: 50px;
+        display: inline-block; margin: 4px; font-size: 0.85rem; border: 1px solid #eee; transition: all 0.3s;
     }
-    .uc-badge:hover {
-        background: #e9ecef;
-        border-color: #0d6efd;
-    }
-
-    /* ADIÇÕES CRUD COERENTES */
-    .crud-actions-academic {
-        position: absolute;
-        top: 15px;
-        right: 15px;
-        display: flex;
-        gap: 8px;
-        z-index: 10;
-    }
-
+    .uc-badge:hover { background: #e9ecef; border-color: #0d6efd; }
+    
+    .crud-actions-academic { position: absolute; top: 15px; right: 15px; display: flex; gap: 8px; z-index: 10; }
     .btn-crud-academic {
-        width: 38px;
-        height: 38px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: rgba(0, 0, 0, 0.05);
-        color: #000; /* Ícones pretos conforme solicitado anteriormente */
-        border: 1px solid rgba(0, 0, 0, 0.1);
-        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        text-decoration: none;
+        width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center;
+        justify-content: center; background: rgba(0, 0, 0, 0.05); color: #000; 
+        border: 1px solid rgba(0, 0, 0, 0.1); transition: all 0.3s; text-decoration: none;
     }
-
     .btn-crud-academic:hover { transform: scale(1.15); color: white; }
     .btn-edit:hover { background: #0d6efd; border-color: #0d6efd; }
     .btn-delete:hover { background: #dc3545; border-color: #dc3545; }
-
+    
     .btn-add-float {
-        position: fixed;
-        bottom: 40px;
-        right: 40px;
-        width: 70px;
-        height: 70px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background-color: #0d6efd;
-        color: white;
-        border: none;
-        box-shadow: 0 15px 35px rgba(13, 110, 253, 0.4);
-        z-index: 1000;
-        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        position: fixed; bottom: 40px; right: 40px; width: 70px; height: 70px; border-radius: 50%;
+        display: flex; align-items: center; justify-content: center; background-color: #0d6efd;
+        color: white; border: none; box-shadow: 0 15px 35px rgba(13, 110, 253, 0.4);
+        z-index: 1000; transition: all 0.4s;
     }
     .btn-add-float:hover { transform: scale(1.15) rotate(90deg); color: white; }
+    .academic-date { font-weight: 600; color: #0d6efd; font-size: 0.9rem; letter-spacing: 1px; }
 </style>
 
 <div class="container py-5">
@@ -121,8 +49,7 @@
     </div>
 
     <div class="timeline-container">
-        
-        {% for licenciatura in licenciaturas %}
+        {% for formacao in formacoes %}
         <div class="timeline-item">
             <div class="timeline-dot"></div>
             <div class="row">
@@ -130,65 +57,46 @@
                     <div class="card journey-card shadow rounded-5 p-4 p-lg-5">
                         
                         <div class="crud-actions-academic">
-                            <a href="{% url 'editar_licenciatura' licenciatura.id %}" class="btn-crud-academic btn-edit">
+                            <a href="{% url 'editar_formacao' formacao.id %}" class="btn-crud-academic btn-edit">
                                 <i class="bi bi-pencil-fill"></i>
                             </a>
-                            <a href="{% url 'eliminar_licenciatura' licenciatura.id %}" class="btn-crud-academic btn-delete" onclick="return confirm('Apagar esta licenciatura?')">
+                            <a href="{% url 'eliminar_formacao' formacao.id %}" class="btn-crud-academic btn-delete" onclick="return confirm('Apagar este registo?')">
                                 <i class="bi bi-trash3-fill"></i>
                             </a>
                         </div>
 
                         <div class="card-body">
-                            <span class="badge bg-primary rounded-pill mb-3 px-3">Licenciatura</span>
-                            <h2 class="fw-bold mb-3">{{ licenciatura.nome }}</h2>
-                            <p class="text-muted mb-4">{{ licenciatura.descricao|default:"Formação superior focada no desenvolvimento de bases sólidas em engenharia e tecnologia." }}</p>
+                            <span class="badge bg-primary rounded-pill mb-3 px-3">Formação</span>
+                            <h2 class="fw-bold mb-1">{{ formacao.designacao }}</h2>
+                            <h5 class="text-secondary mb-2">{{ formacao.instituicao }}</h5>
+                            
+                            <p class="academic-date mb-3 text-uppercase">
+                                {{ formacao.data_inicio|date:"Y" }} — 
+                                {% if formacao.data_fim %}{{ formacao.data_fim|date:"Y" }}{% else %}Presente{% endif %}
+                            </p>
+
+                            <p class="text-muted mb-4">{{ formacao.descricao }}</p>
                             
                             <hr class="my-4 opacity-10">
                             
-                            <h5 class="fw-bold mb-3 small text-uppercase ls-2">Unidades Curriculares</h5>
+                            <h5 class="fw-bold mb-3 small text-uppercase ls-2">Competências Adquiridas</h5>
                             <div class="d-flex flex-wrap justify-content-center">
-                                {% for uc in licenciatura.unidadecurricular_set.all %}
-                                <span class="uc-badge">{{ uc.nome }}</span>
+                                {% for comp in formacao.competencias_adquiridas.all %}
+                                    <span class="uc-badge"><i class="bi bi-check2-circle text-success me-1"></i> {{ comp.nome }}</span>
                                 {% empty %}
-                                <span class="text-muted small">Cadeiras a carregar...</span>
+                                    <span class="text-muted small">Sem competências associadas.</span>
                                 {% endfor %}
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
+        {% empty %}
+        <div class="col-12 text-center py-5">
+            <p class="text-muted">Ainda não há registos no percurso. Adiciona o primeiro!</p>
         </div>
         {% endfor %}
-
-        <div class="timeline-item">
-            <div class="timeline-dot bg-success"></div>
-            <div class="row">
-                <div class="col-lg-8 mx-auto text-center">
-                    <div class="card journey-card shadow rounded-5 p-4 p-lg-5" style="border-top: 6px solid #198754;">
-                        <div class="card-body">
-                            <span class="badge bg-success rounded-pill mb-3 px-3">Certificações & Formação</span>
-                            <h2 class="fw-bold mb-4">Desenvolvimento Contínuo</h2>
-                            <div class="row g-3">
-                                {% for formacao in formacoes %}
-                                <div class="col-md-6 position-relative">
-                                    <div class="p-3 bg-light rounded-4 h-100 text-start pe-5">
-                                        <h6 class="fw-bold mb-1">{{ formacao.nome }}</h6>
-                                        <p class="small text-muted mb-0">{{ formacao.instituicao }}</p>
-                                        
-                                        <div style="position: absolute; top: 10px; right: 15px; display: flex; gap: 5px;">
-                                            <a href="{% url 'eliminar_formacao' formacao.id %}" class="text-danger" onclick="return confirm('Apagar formação?')">
-                                                <i class="bi bi-x-circle-fill"></i>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                                {% endfor %}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
 </div>
 
@@ -197,20 +105,46 @@
 </button>
 
 <div class="modal fade" id="modalAddAcademic" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content rounded-5 border-0 shadow-lg p-4">
             <div class="modal-header border-0">
                 <h5 class="fw-bold">Novo Registo Académico</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
+            
             <form method="POST" action="{% url 'percurso' %}">
                 {% csrf_token %}
                 <div class="modal-body">
-                    <input type="text" name="nome" class="form-control rounded-pill p-3 mb-3 bg-light border-0" placeholder="Nome do Curso/Licenciatura" required>
-                    <textarea name="descricao" class="form-control rounded-4 p-3 bg-light border-0" rows="3" placeholder="Breve descrição..."></textarea>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <input type="text" name="designacao" class="form-control rounded-pill p-3 bg-light border-0" placeholder="Designação do Curso/Cargo" required>
+                        </div>
+                        <div class="col-md-6">
+                            <input type="text" name="instituicao" class="form-control rounded-pill p-3 bg-light border-0" placeholder="Instituição/Empresa" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="small fw-bold text-muted ms-2 mb-1">Data Início</label>
+                            <input type="date" name="data_inicio" class="form-control rounded-pill p-3 bg-light border-0" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="small fw-bold text-muted ms-2 mb-1">Data Fim (Opcional)</label>
+                            <input type="date" name="data_fim" class="form-control rounded-pill p-3 bg-light border-0">
+                        </div>
+                        <div class="col-12">
+                            <textarea name="descricao" class="form-control rounded-4 p-3 bg-light border-0" rows="3" placeholder="Breve descrição..."></textarea>
+                        </div>
+                        <div class="col-12">
+                            <label class="small fw-bold text-muted ms-2 mb-1">Competências Adquiridas (Ctrl+Click)</label>
+                            <select name="competencias_adquiridas" class="form-select rounded-4 p-3 bg-light border-0" multiple size="4">
+                                {% for comp in todas_competencias %}
+                                    <option value="{{ comp.id }}">{{ comp.nome }} ({{ comp.nivel }})</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
                 </div>
                 <div class="modal-footer border-0">
-                    <button type="submit" class="btn btn-primary rounded-pill px-5 shadow-sm">Adicionar</button>
+                    <button type="submit" class="btn btn-primary rounded-pill px-5 shadow-sm">Adicionar Registo</button>
                 </div>
             </form>
         </div>

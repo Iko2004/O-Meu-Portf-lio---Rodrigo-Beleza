@@ -9,14 +9,12 @@
         height: 400px;
         transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
     }
-
     .project-image {
         width: 100%;
         height: 100%;
         object-fit: cover;
         transition: transform 0.6s ease;
     }
-
     .project-overlay {
         position: absolute;
         inset: 0;
@@ -27,16 +25,13 @@
         padding: 2rem;
         transition: background 0.4s ease;
     }
-
     .project-card:hover {
         transform: translateY(-10px);
         box-shadow: 0 20px 40px rgba(0,0,0,0.2) !important;
     }
-    
     .project-card:hover .project-image {
         transform: scale(1.08); 
     }
-
     .tech-pill {
         background: rgba(255, 255, 255, 0.15);
         backdrop-filter: blur(10px);
@@ -51,17 +46,14 @@
         display: inline-block;
         border: 1px solid rgba(255, 255, 255, 0.2);
     }
-
-
     .crud-actions {
         position: absolute;
         top: 20px;
         right: 20px;
         display: flex;
         gap: 10px;
-        z-index: 10; 
+        z-index: 10;
     }
-
     .btn-crud {
         width: 42px;
         height: 42px;
@@ -69,23 +61,18 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        background: rgba(255, 255, 255, 0.4); 
+        background: rgba(255, 255, 255, 0.4);
         backdrop-filter: blur(8px);
         -webkit-backdrop-filter: blur(8px);
-        color: #000000; /* COR ALTERADA PARA PRETO */
+        color: #000000;
         border: 1px solid rgba(255, 255, 255, 0.3);
         transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         text-decoration: none;
     }
-
-    .btn-crud:hover { 
-        transform: scale(1.15); 
-        color: white; 
-    }
-    
+    .btn-crud:hover { transform: scale(1.15); color: white; }
     .btn-edit:hover { background: #0d6efd; border-color: #0d6efd; }
     .btn-delete:hover { background: #dc3545; border-color: #dc3545; }
-
+    
     .btn-add-float {
         position: fixed;
         bottom: 40px;
@@ -103,19 +90,15 @@
         z-index: 1000;
         transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
-
     .btn-add-float:hover { 
         transform: scale(1.15) rotate(5deg); 
         box-shadow: 0 20px 40px rgba(13, 110, 253, 0.6);
         background-color: #0a58ca;
         color: white;
     }
-
-    .btn-add-float .bi-plus-lg { font-size: 2rem; line-height: 1; }
 </style>
 
 <div class="container py-5">
-    
     <div class="text-center mb-5">
         <h6 class="text-primary fw-bold text-uppercase ls-2">Portfólio</h6>
         <h1 class="display-3 fw-bold">Os Meus Projetos</h1>
@@ -139,13 +122,13 @@
                 </div>
 
                 {% if projeto.imagem %}
-                    <img src="{{ projeto.imagem.url }}" alt="{{ projeto.nome }}" class="project-image">
+                    <img src="{{ projeto.imagem.url }}" alt="{{ projeto.titulo }}" class="project-image">
                 {% else %}
                     <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Código" class="project-image">
                 {% endif %}
 
                 <div class="project-overlay text-white">
-                    <h3 class="fw-bold mb-2">{{ projeto.nome }}</h3>
+                    <h3 class="fw-bold mb-2">{{ projeto.titulo }}</h3>
                     <p class="mb-4 text-light opacity-75">{{ projeto.descricao|truncatechars:100 }}</p>
                     
                     <div class="mb-4">
@@ -161,8 +144,8 @@
                         </a>
                         {% endif %}
                         
-                        {% if projeto.link_video %}
-                        <a href="{{ projeto.link_video }}" target="_blank" class="btn btn-outline-light rounded-pill px-4">
+                        {% if projeto.video_demo %}
+                        <a href="{{ projeto.video_demo }}" target="_blank" class="btn btn-outline-light rounded-pill px-4">
                             <i class="bi bi-play-circle me-2"></i>Vídeo
                         </a>
                         {% endif %}
@@ -181,36 +164,82 @@
         </div>
         {% endfor %}
     </div>
-
 </div>
 
 <button class="btn-add-float" data-bs-toggle="modal" data-bs-target="#modalAddProject" title="Novo Projeto">
-    <i class="bi bi-plus-lg"></i>
+    <i class="bi bi-plus-lg fs-3"></i>
 </button>
 
 <div class="modal fade" id="modalAddProject" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content rounded-5 border-0 shadow-lg p-3">
             <div class="modal-header border-0 pb-0">
                 <h5 class="modal-title fw-bold fs-4">Novo Projeto</h5>
                 <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal"></button>
             </div>
             
-            <form method="POST" action="{% url 'projetos' %}">
+            <form method="POST" action="{% url 'projetos' %}" enctype="multipart/form-data">
                 {% csrf_token %}
                 <div class="modal-body py-4">
-                    <div class="mb-3">
-                        <label class="form-label small fw-bold text-muted ms-2">Nome</label>
-                        <input type="text" name="nome" class="form-control form-control-lg rounded-pill px-4 bg-light border-0" placeholder="Ex: E-commerce Django" required>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label small fw-bold text-muted ms-2">Descrição</label>
-                        <textarea name="descricao" class="form-control rounded-4 p-3 bg-light border-0" rows="4" placeholder="Detalhes curtos sobre o projeto..."></textarea>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label small fw-bold text-muted ms-2">Título do Projeto</label>
+                            <input type="text" name="titulo" class="form-control form-control-lg rounded-pill px-4 bg-light border-0" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label small fw-bold text-muted ms-2">Unidade Curricular (UC)</label>
+                            <select name="uc" class="form-select form-select-lg rounded-pill px-4 bg-light border-0">
+                                <option value="">Nenhuma / Pessoal</option>
+                                {% for uc in todas_ucs %}
+                                    <option value="{{ uc.id }}">{{ uc.nome }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label small fw-bold text-muted ms-2">Link GitHub</label>
+                            <input type="url" name="link_github" class="form-control form-control-lg rounded-pill px-4 bg-light border-0" placeholder="https://github.com/...">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label small fw-bold text-muted ms-2">Vídeo Demo (URL)</label>
+                            <input type="url" name="video_demo" class="form-control form-control-lg rounded-pill px-4 bg-light border-0">
+                        </div>
+
+                        <div class="col-12">
+                            <label class="form-label small fw-bold text-muted ms-2">Descrição</label>
+                            <textarea name="descricao" class="form-control rounded-4 p-3 bg-light border-0" rows="3" required></textarea>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label small fw-bold text-muted ms-2">Conceitos Aplicados</label>
+                            <textarea name="conceitos_aplicados" class="form-control rounded-4 p-3 bg-light border-0" rows="2"></textarea>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label small fw-bold text-muted ms-2">Tecnologias (Ctrl+Clique para várias)</label>
+                            <select name="tecnologias" class="form-select rounded-4 bg-light border-0" multiple size="4">
+                                {% for tech in todas_tecnologias %}
+                                    <option value="{{ tech.id }}">{{ tech.nome }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label small fw-bold text-muted ms-2">Competências (Ctrl+Clique para várias)</label>
+                            <select name="competencias" class="form-select rounded-4 bg-light border-0" multiple size="4">
+                                {% for comp in todas_competencias %}
+                                    <option value="{{ comp.id }}">{{ comp.nome }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="col-12 mt-3">
+                            <label class="form-label small fw-bold text-muted ms-2">Imagem de Capa</label>
+                            <input type="file" name="imagem" class="form-control form-control-lg rounded-pill px-4 bg-light border-0" accept="image/*">
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer border-0 pt-0">
                     <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="submit" class="btn btn-primary rounded-pill px-4 shadow-sm">Adicionar Projeto</button>
+                    <button type="submit" class="btn btn-primary rounded-pill px-4 shadow-sm">Criar Projeto</button>
                 </div>
             </form>
         </div>

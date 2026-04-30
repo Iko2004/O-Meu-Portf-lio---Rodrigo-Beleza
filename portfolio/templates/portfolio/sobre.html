@@ -1,0 +1,66 @@
+{% extends 'portfolio/base.html' %}
+{% load markdownify %}
+
+{% block content %}
+<div class="container py-5">
+    <section class="mb-5">
+        <h2 class="fw-bold">Arquitetura MVT</h2>
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <p>O Django separa a lógica em Model (Dados), View (Lógica) e Template (Interface).</p>
+                <iframe width="100%" height="315" src="https://www.youtube.com/embed/O_TEU_VIDEO" frameborder="0" allowfullscreen></iframe>
+            </div>
+            <div class="col-md-6">
+                <img src="/static/portfolio/images/mvt_desenho.jpg" class="img-fluid rounded shadow" alt="Desenho MVT">
+            </div>
+        </div>
+    </section>
+
+    <section class="mb-5">
+        <h2 class="fw-bold mb-4">Tecnologias</h2>
+        
+        {% regroup tecnologias by tipo.nome|default:"Sem Categoria" as tecnologias_por_tipo %}
+        
+        <div class="row g-4">
+            {% for grupo in tecnologias_por_tipo %}
+                <div class="col-12 mt-4">
+                    <h4 class="text-primary fw-bold border-bottom pb-2">{{ grupo.grouper }}</h4>
+                </div>
+                
+                {% for tech in grupo.list %}
+                <div class="col-md-4">
+                    <div class="card h-100 shadow-sm border-0 rounded-4">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center mb-3">
+                                {% if tech.logo %}
+                                    <img src="{{ tech.logo.url }}" alt="{{ tech.nome }}" width="30" height="30" class="me-3 object-fit-contain">
+                                {% else %}
+                                    <i class="bi bi-cpu fs-3 text-muted me-3"></i>
+                                {% endif %}
+                                <h5 class="fw-bold mb-0">{{ tech.nome }}</h5>
+                            </div>
+                            <p class="small text-muted mb-0">{{ tech.detalhes|default:"Sem descrição disponível." }}</p>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                
+            {% empty %}
+                <div class="col-12">
+                    <p class="text-muted">Ainda não existem tecnologias registadas no sistema.</p>
+                </div>
+            {% endfor %}
+        </div>
+    </section>
+
+    <section>
+        <h2 class="fw-bold">Making-Of</h2>
+        {% for log in makingofs %}
+            <div class="border-start border-4 border-primary ps-4 mb-4">
+                <h5>{{ log.titulo }}</h5>
+                <div>{{ log.descricao|markdownify }}</div>
+            </div>
+        {% endfor %}
+    </section>
+</div>
+{% endblock %}

@@ -67,7 +67,7 @@
             <h1 class="display-4 fw-bold mb-0">Tecnologias</h1>
         </div>
         
-        <button class="btn btn-primary btn-add-float" data-bs-toggle="modal" data-bs-target="#modalAdd" title="Adicionar Tecnologia">
+        <button class="btn btn-primary btn-add-header" data-bs-toggle="modal" data-bs-target="#modalAddTech" title="Adicionar Tecnologia">
             <i class="bi bi-plus-lg fs-3"></i>
         </button>
     </div>
@@ -119,26 +119,55 @@
     </div>
 </div>
 
-<div class="modal fade" id="modalAdd" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
+<div class="modal fade" id="modalAddTech" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content rounded-5 border-0 shadow-lg p-3">
             <div class="modal-header border-0 pb-0">
                 <h5 class="modal-title fw-bold fs-4">Nova Tecnologia</h5>
                 <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal"></button>
             </div>
             
-            <form method="POST" action="{% url 'tecnologias' %}">
+            <form method="POST" action="{% url 'tecnologias' %}" enctype="multipart/form-data">
                 {% csrf_token %}
                 <div class="modal-body py-4">
-                    <label class="form-label small fw-bold text-muted ms-2">Nome da Tecnologia</label>
-                    <input type="text" name="nome" class="form-control form-control-lg rounded-pill px-4 bg-light border-0" placeholder="Ex: React, AWS, Docker" required>
+                    <div class="row g-3">
+                        <div class="col-md-8">
+                            <label class="form-label small fw-bold text-muted ms-2">Nome</label>
+                            <input type="text" name="nome" class="form-control form-control-lg rounded-pill px-4 bg-light border-0" required>
+                        </div>
+                        
+                        <div class="col-md-4">
+                            <label class="form-label small fw-bold text-muted ms-2">Interesse</label>
+                            <select name="nivel_interesse" class="form-select form-select-lg rounded-pill px-4 bg-light border-0">
+                                <option value="5">5</option>
+                                <option value="4">4</option>
+                                <option value="3">3</option>
+                                <option value="2">2</option>
+                                <option value="1">1</option>
+                            </select>
+                        </div>
+
+                        <div class="col-12">
+                            <label class="form-label small fw-bold text-muted ms-2">Link Oficial</label>
+                            <input type="url" name="link_oficial" class="form-control form-control-lg rounded-pill px-4 bg-light border-0">
+                        </div>
+
+                        <div class="col-12">
+                            <label class="form-label small fw-bold text-muted ms-2">Detalhes</label>
+                            <textarea name="detalhes" class="form-control rounded-4 p-3 bg-light border-0" rows="3"></textarea>
+                        </div>
+
+                        <div class="col-12 mt-3">
+                            <label class="form-label small fw-bold text-muted ms-2">Logo (Imagem)</label>
+                            <input type="file" name="logo" class="form-control form-control-lg rounded-pill px-4 bg-light border-0" accept="image/*">
+                        </div>
+                    </div>
                 </div>
                 <div class="modal-footer border-0 pt-0">
                     <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="submit" class="btn btn-primary rounded-pill px-4 shadow-sm">Adicionar à BD</button>
+                    <button type="submit" class="btn btn-primary rounded-pill px-4 shadow-sm">Adicionar Tecnologia</button>
                 </div>
             </form>
-            
         </div>
     </div>
 </div>

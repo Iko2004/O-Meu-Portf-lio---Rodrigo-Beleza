@@ -1,88 +1,133 @@
 {% extends 'portfolio/base.html' %}
+{% load markdownify %}
 
 {% block content %}
 <style>
-    .log-card {
-        transition: all 0.4s ease;
-        background: #ffffff;
-        position: relative;
-        overflow: hidden;
+    .makingof-card { border: none; border-radius: 25px; transition: transform 0.3s ease; background: #fff; }
+    .makingof-card:hover { transform: translateY(-8px); }
+    .badge-tech { background: #eef2ff; color: #4338ca; border: 1px solid #e0e7ff; }
+    .section-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; color: #94a3b8; font-weight: 700; margin-bottom: 8px; display: block; }
+    .content-box { background: #f8fafc; border-radius: 15px; padding: 20px; border: 1px solid #f1f5f9; height: 100%; }
+    .ia-box { background: #f0f9ff; border: 1px solid #e0f2fe; border-left: 4px solid #0ea5e9; }
+    
+    /* Efeito para a imagem com correção de hardware para não piscar */
+    .expandable-img { 
+        cursor: zoom-in; 
+        transition: transform 0.3s ease, box-shadow 0.3s ease; 
+        backface-visibility: hidden; 
+        transform: translateZ(0);
     }
-
-    .log-card:hover {
-        transform: translateY(-8px);
-        box-shadow: 0 25px 50px rgba(0,0,0,0.05) !important;
-    }
-
-    .category-badge {
-        position: absolute;
-        top: 25px;
-        right: 25px;
-        background: rgba(13, 110, 253, 0.1);
-        color: #0d6efd;
-        padding: 6px 16px;
-        border-radius: 50px;
-        font-size: 0.8rem;
-        font-weight: 700;
-        letter-spacing: 1px;
-        text-transform: uppercase;
-    }
-
-    .log-content {
-        border-left: 3px solid #e9ecef;
-        padding-left: 1.5rem;
-        margin-top: 1.5rem;
+    .expandable-img:hover { 
+        transform: scale(1.02) translateZ(0); 
+        box-shadow: 0 10px 20px rgba(0,0,0,0.15) !important; 
     }
 </style>
 
 <div class="container py-5">
     
-    <div class="row mb-5 justify-content-center text-center">
+    <!-- Cabeçalho -->
+    <div class="row align-items-center mb-5">
         <div class="col-lg-8">
-            <span class="badge bg-dark rounded-pill mb-3 px-4 py-2 text-uppercase ls-2 shadow-sm">Diário de Bordo</span>
-            <h1 class="display-3 fw-bold mb-4">Bastidores do Projeto</h1>
-            <p class="lead text-muted">
-                A tecnologia não é magia, é resolução constante de problemas. 
-                Aqui documento os desafios arquiteturais, os erros superados e as aprendizagens técnicas durante a construção deste portfólio.
-            </p>
+            <h1 class="display-4 fw-bold">Making Of</h1>
+            <p class="lead text-muted">Registo detalhado da evolução técnica e decisões de arquitetura.</p>
+        </div>
+        <div class="col-lg-4 text-lg-end">
+            <!-- BOTÃO PDF -->
+            <a href="/media/makingof/MakingOf.pdf" download="Relatorio_MakingOf.pdf" class="btn btn-danger btn-lg rounded-pill px-4 shadow">
+                <i class="bi bi-cloud-arrow-down-fill me-2"></i>Transferir Relatório
+            </a>
         </div>
     </div>
 
-    <div class="row g-4 justify-content-center">
-        {% for log in makingofs %}
-        <div class="col-lg-10"> <div class="card log-card border-0 rounded-5 shadow-sm p-4 p-md-5">
-                
-                {% if log.entidade_relacionada %}
-                <div class="category-badge">
-                    {{ log.entidade_relacionada }}
-                </div>
-                {% endif %}
-
-                <div class="card-body p-0 mt-3 mt-md-0">
-                    <h2 class="fw-bold mb-3 pe-md-5">{{ log.descricao|truncatechars:60 }}</h2>
+    <div class="row g-4">
+        {% for registo in makingofs %}
+        <div class="col-12 mb-4">
+            
+            <!-- O CARTÃO -->
+            <div class="card makingof-card shadow-sm p-4 p-lg-5">
+                <div class="row g-4">
                     
-                    <div class="log-content">
-                        <p class="text-secondary fs-5 lh-lg mb-0" style="white-space: pre-wrap;">{{ log.descricao }}</p>
+                    <!-- Coluna da Imagem (Fotografia caderno) -->
+                    <div class="col-xl-4">
+                        <span class="section-label">Esboço / Diagrama</span>
+                        {% if registo.fotografia_caderno %}
+                            <!-- Apenas o "gatilho" fica aqui dentro -->
+                            <a data-bs-toggle="modal" data-bs-target="#modalImagem{{ registo.id }}" style="display: block;">
+                                <img src="{{ registo.fotografia_caderno.url }}" class="img-fluid rounded-4 shadow-sm w-100 expandable-img" style="max-height: 350px; object-fit: cover;" title="Clique para expandir">
+                            </a>
+                        {% else %}
+                            <div class="bg-light rounded-4 d-flex align-items-center justify-content-center text-muted" style="height: 250px;">
+                                <i class="bi bi-image fs-1"></i>
+                            </div>
+                        {% endif %}
                     </div>
 
-                    <div class="mt-4 pt-3 border-top d-flex justify-content-between align-items-center">
-                        <span class="text-muted small fw-bold">#{{ log.id }} Registo do Sistema</span>
+                    <!-- Coluna das Informações -->
+                    <div class="col-xl-8">
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <h2 class="fw-bold mb-0">{{ registo.titulo }}</h2>
+                            {% if registo.entidade_relacionada %}
+                                <span class="badge badge-tech rounded-pill px-3 py-2">{{ registo.entidade_relacionada }}</span>
+                            {% endif %}
+                        </div>
                         
-                        {% load static %}
-                        <a href="{% static 'portfolio/docs/MakingOf.pdf' %}" target="_blank" class="btn btn-outline-primary rounded-pill btn-sm px-4">
-                            <i class="bi bi-file-earmark-pdf me-2"></i>Ver Relatório Original
-                        </a>
+                        <div class="row g-3">
+                            <!-- Decisões -->
+                            <div class="col-md-6">
+                                <div class="content-box">
+                                    <span class="section-label text-primary">Decisões Técnicas</span>
+                                    <div class="small">{{ registo.descricao_decisoes|markdownify }}</div>
+                                </div>
+                            </div>
+                            <!-- Justificação -->
+                            <div class="col-md-6">
+                                <div class="content-box">
+                                    <span class="section-label text-info">Justificação de Modelação</span>
+                                    <div class="small">{{ registo.justificacao_modelacao|markdownify }}</div>
+                                </div>
+                            </div>
+                            <!-- Erros -->
+                            <div class="col-md-12">
+                                <div class="content-box border-danger-subtle">
+                                    <span class="section-label text-danger">Erros & Correções</span>
+                                    <div class="small">{{ registo.erros_correcoes|markdownify }}</div>
+                                </div>
+                            </div>
+                            <!-- IA -->
+                            <div class="col-12">
+                                <div class="content-box ia-box">
+                                    <span class="section-label text-primary"><i class="bi bi-robot me-1"></i> Apoio de IA</span>
+                                    <div class="small mb-0">{{ registo.uso_ia|markdownify }}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div> <!-- Fim do Cartão -->
+
+            <!-- O MODAL COM O BOTÃO 'X' CORRIGIDO -->
+            {% if registo.fotografia_caderno %}
+            <div class="modal fade" id="modalImagem{{ registo.id }}" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-xl">
+                    <div class="modal-content bg-transparent border-0">
+                        <div class="modal-header border-0 pb-0 justify-content-end">
+                            <!-- Botão de Fechar Personalizado -->
+                            <button type="button" class="btn btn-dark rounded-circle shadow d-flex align-items-center justify-content-center" data-bs-dismiss="modal" aria-label="Fechar" style="width: 45px; height: 45px; z-index: 10;">
+                                <i class="bi bi-x-lg fs-5 text-white"></i>
+                            </button>
+                        </div>
+                        <div class="modal-body text-center pt-0">
+                            <img src="{{ registo.fotografia_caderno.url }}" class="img-fluid rounded-4 shadow-lg" alt="Esboço Expandido">
+                        </div>
                     </div>
                 </div>
             </div>
+            {% endif %}
+
         </div>
         {% empty %}
         <div class="col-12 text-center py-5">
-            <div class="p-5 bg-light rounded-5 text-muted shadow-sm">
-                <i class="bi bi-journal-x fs-1 mb-3"></i>
-                <h5>O Diário está em branco</h5>
-                <p>Ainda não foram registados desafios no painel de administração.</p>
-            </div>
+            <h3 class="fw-bold text-muted">Ainda não existem registos.</h3>
         </div>
         {% endfor %}
     </div>

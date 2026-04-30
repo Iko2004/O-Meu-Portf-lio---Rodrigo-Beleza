@@ -31,6 +31,12 @@ class UnidadeCurricular(models.Model):
     def __str__(self):
         return f'{self.nome} ({self.ano}º Ano)'
 
+class Tipo(models.Model):
+    nome = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.nome
+
 class Tecnologia(models.Model):
     NIVEL_CHOICES = [(i, str(i)) for i in range(1, 6)]
     
@@ -40,8 +46,12 @@ class Tecnologia(models.Model):
     detalhes = models.TextField()
     nivel_interesse = models.IntegerField(choices=NIVEL_CHOICES)
 
+    tipo = models.ForeignKey(Tipo, on_delete=models.SET_NULL, null=True, related_name="tecnologias")
+
     def __str__(self):
         return self.nome
+
+
 
 class Competencia(models.Model):
     CATEGORIA_CHOICES = [

@@ -1,131 +1,204 @@
-from django.shortcuts import render
-from .models import Tecnologia 
-from .models import Licenciatura, Formacao
-from .models import Tecnologia, Licenciatura, Formacao, MakingOf 
-from .models import Projeto
-from .models import Competencia 
-
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Tecnologia
+from .models import Tecnologia, Licenciatura, Formacao, MakingOf, Projeto, Competencia, UnidadeCurricular, Tipo
 
-from django.shortcuts import render, redirect, get_object_or_404
-from .models import Projeto
-
-from django.shortcuts import render, redirect, get_object_or_404
-from .models import Licenciatura, Formacao
-
-
+# ==========================================
+# PÁGINAS PRINCIPAIS
+# ==========================================
 def home_view(request):
     return render(request, 'portfolio/home.html')
 
-
-def tecnologias_view(request):
-    tecnologias = Tecnologia.objects.all() 
-    return render(request, 'portfolio/tecnologias.html', {'tecnologias': tecnologias})
-
-
-def percurso_view(request):
-    licenciaturas = Licenciatura.objects.all()
-    formacoes = Formacao.objects.all()
-    return render(request, 'portfolio/percurso.html', {
-        'licenciaturas': licenciaturas,
-        'formacoes': formacoes
-    })
-
+def contactos_view(request):
+    return render(request, 'portfolio/contactos.html')
 
 def makingofs_view(request):
     makingofs = MakingOf.objects.all().order_by('-id') 
     return render(request, 'portfolio/makingofs.html', {'makingofs': makingofs})
 
-
-def projetos_view(request):
-    projetos = Projeto.objects.all()
-    return render(request, 'portfolio/projetos.html', {'projetos': projetos})
-
-def contactos_view(request):
-    return render(request, 'portfolio/contactos.html')
-
-
-def competencias_view(request):
-    if request.method == "POST":
-        nome = request.POST.get('nome')
-        nivel = request.POST.get('nivel')
-        Competencia.objects.create(nome=nome, nivel=nivel)
-        return redirect('competencias')
-        
-    competencias = Competencia.objects.all()
-    return render(request, 'portfolio/competencias.html', {'competencias': competencias})
-
-
-
-
+# ==========================================
+# TECNOLOGIAS (CRUD)
+# ==========================================
 def tecnologias_view(request):
     if request.method == "POST":
         nome = request.POST.get('nome')
-        Tecnologia.objects.create(nome=nome)
+        link = request.POST.get('link_oficial')
+        detalhes = request.POST.get('detalhes')
+        nivel = request.POST.get('nivel_interesse')
+        
+        tecnologia = Tecnologia(nome=nome, link_oficial=link, detalhes=detalhes, nivel_interesse=nivel)
+        if 'logo' in request.FILES:
+            tecnologia.logo = request.FILES['logo']
+            
+        tecnologia.save()
         return redirect('tecnologias')
-    
+        
     tecnologias = Tecnologia.objects.all()
     return render(request, 'portfolio/tecnologias.html', {'tecnologias': tecnologias})
+
+def editar_tecnologia(request, id):
+    tecnologia = get_object_or_404(Tecnologia, id=id)
+    if request.method == "POST":
+        tecnologia.nome = request.POST.get('nome')
+        tecnologia.link_oficial = request.POST.get('link_oficial')
+        tecnologia.detalhes = request.POST.get('detalhes')
+        tecnologia.nivel_interesse = request.POST.get('nivel_interesse')
+        
+        if 'logo' in request.FILES:
+            tecnologia.logo = request.FILES['logo']
+            
+        tecnologia.save()
+        return redirect('tecnologias')
+        
+    return render(request, 'portfolio/editar_tecnologia.html', {'tecnologia': tecnologia})
 
 def eliminar_tecnologia(request, id):
     tecnologia = get_object_or_404(Tecnologia, id=id)
     tecnologia.delete()
     return redirect('tecnologias')
 
-def editar_tecnologia(request, id):
-    tecnologia = get_object_or_404(Tecnologia, id=id)
-    if request.method == "POST":
-        tecnologia.nome = request.POST.get('nome')
-        tecnologia.save()
-        return redirect('tecnologias')
-    return render(request, 'portfolio/editar_tecnologia.html', {'tecnologia': tecnologia})
-
-
-
-
+# ==========================================
+# PROJETOS (CRUD)
+# ==========================================
 def projetos_view(request):
     if request.method == "POST":
-        nome = request.POST.get('nome')
-        descricao = request.POST.get('descricao')
-        Projeto.objects.create(nome=nome, descricao=descricao)
+        projeto = Projeto.objects.create(
+            titulo=request.POST.get('titulo'), 
+            descricao=request.POST.get('descricao'),
+            conceitos_aplicados=request.POST.get('conceitos_aplicados'),
+            link_github=request.POST.get('link_github'),
+            video_demo=request.POST.get('video_demo') 
+        )
+        
+        uc_id = request.POST.get('uc')
+        if uc_id: projeto.uc_id = uc_id
+        if 'imagem' in request.FILES: projeto.imagem = request.FILES['imagem']
+            
+        projeto.save()
+        projeto.tecnologias.set(request.POST.getlist('tecnologias'))
+        projeto.competencias.set(request.POST.getlist('competencias'))
         return redirect('projetos')
     
-    projetos = Projeto.objects.all()
-    return render(request, 'portfolio/projetos.html', {'projetos': projetos})
+    context = {
+        'projetos': Projeto.objects.all(),
+        'todas_tecnologias': Tecnologia.objects.all(),
+        'todas_ucs': UnidadeCurricular.objects.all(), 
+        'todas_competencias': Competencia.objects.all(),
+    }
+    return render(request, 'portfolio/projetos.html', context)
+
+def editar_projeto(request, id):
+    projeto = get_object_or_404(Projeto, id=id)
+    if request.method == "POST":
+        projeto.titulo = request.POST.get('titulo')
+        projeto.descricao = request.POST.get('descricao')
+        projeto.conceitos_aplicados = request.POST.get('conceitos_aplicados')
+        projeto.link_github = request.POST.get('link_github')
+        projeto.video_demo = request.POST.get('video_demo')
+        
+        uc_id = request.POST.get('uc')
+        if uc_id: projeto.uc_id = uc_id
+        else: projeto.uc = None
+
+        if 'imagem' in request.FILES: projeto.imagem = request.FILES['imagem']
+            
+        projeto.save()
+        projeto.tecnologias.set(request.POST.getlist('tecnologias'))
+        projeto.competencias.set(request.POST.getlist('competencias'))
+        return redirect('projetos')
+
+    context = {
+        'projeto': projeto,
+        'todas_tecnologias': Tecnologia.objects.all(),
+        'todas_ucs': UnidadeCurricular.objects.all(), 
+        'todas_competencias': Competencia.objects.all(),
+    }
+    return render(request, 'portfolio/editar_projeto.html', context)
 
 def eliminar_projeto(request, id):
     projeto = get_object_or_404(Projeto, id=id)
     projeto.delete()
     return redirect('projetos')
 
-def editar_projeto(request, id):
-    projeto = get_object_or_404(Projeto, id=id)
+# ==========================================
+# PERCURSO ACADÉMICO / FORMAÇÕES (CRUD)
+# ==========================================
+def percurso_view(request):
     if request.method == "POST":
-        projeto.nome = request.POST.get('nome')
-        projeto.descricao = request.POST.get('descricao')
-        projeto.save()
-        return redirect('projetos')
-    return render(request, 'portfolio/editar_projeto.html', {'projeto': projeto})
+        formacao = Formacao.objects.create(
+            designacao=request.POST.get('designacao'),
+            instituicao=request.POST.get('instituicao'),
+            data_inicio=request.POST.get('data_inicio'),
+            data_fim=request.POST.get('data_fim') or None,
+            descricao=request.POST.get('descricao')
+        )
+        formacao.competencias_adquiridas.set(request.POST.getlist('competencias_adquiridas'))
+        return redirect('percurso')
+    
+    context = {
+        'formacoes': Formacao.objects.all(),
+        'todas_competencias': Competencia.objects.all(), 
+    }
+    return render(request, 'portfolio/percurso.html', context)
 
+def editar_formacao(request, id):
+    formacao = get_object_or_404(Formacao, id=id)
+    if request.method == "POST":
+        formacao.designacao = request.POST.get('designacao')
+        formacao.instituicao = request.POST.get('instituicao')
+        formacao.data_inicio = request.POST.get('data_inicio')
+        formacao.data_fim = request.POST.get('data_fim') or None
+        formacao.descricao = request.POST.get('descricao')
+        
+        formacao.save()
+        formacao.competencias_adquiridas.set(request.POST.getlist('competencias_adquiridas'))
+        return redirect('percurso')
 
-
-
-def eliminar_licenciatura(request, id):
-    licenciatura = get_object_or_404(Licenciatura, id=id)
-    licenciatura.delete()
-    return redirect('percurso')
+    context = {
+        'formacao': formacao,
+        'todas_competencias': Competencia.objects.all(),
+    }
+    return render(request, 'portfolio/editar_formacao.html', context)
 
 def eliminar_formacao(request, id):
     formacao = get_object_or_404(Formacao, id=id)
     formacao.delete()
     return redirect('percurso')
 
-def editar_licenciatura(request, id):
-    licenciatura = get_object_or_404(Licenciatura, id=id)
+# ==========================================
+# COMPETÊNCIAS (CRUD)
+# ==========================================
+def competencias_view(request):
     if request.method == "POST":
-        licenciatura.nome = request.POST.get('nome')
-        licenciatura.descricao = request.POST.get('descricao')
-        licenciatura.save()
-        return redirect('percurso')
-    return render(request, 'portfolio/editar_licenciatura.html', {'licenciatura': licenciatura})
+        Competencia.objects.create(
+            nome=request.POST.get('nome'), 
+            categoria=request.POST.get('categoria'), 
+            nivel=request.POST.get('nivel')
+        )
+        return redirect('competencias')
+    return render(request, 'portfolio/competencias.html', {'competencias': Competencia.objects.all()})
+
+def editar_competencia(request, id):
+    competencia = get_object_or_404(Competencia, id=id)
+    if request.method == "POST":
+        competencia.nome = request.POST.get('nome')
+        competencia.categoria = request.POST.get('categoria')
+        competencia.nivel = request.POST.get('nivel')
+        competencia.save()
+        return redirect('competencias')
+    return render(request, 'portfolio/editar_competencia.html', {'competencia': competencia})
+
+def eliminar_competencia(request, id):
+    competencia = get_object_or_404(Competencia, id=id)
+    competencia.delete()
+    return redirect('competencias')
+
+
+
+def sobre_view(request):
+    tecnologias = Tecnologia.objects.all().order_by('tipo__nome', 'nome')
+    makingofs = MakingOf.objects.all().order_by('-id')
+    
+    context = {
+        'tecnologias': tecnologias,
+        'makingofs': makingofs,
+    }
+    return render(request, 'portfolio/sobre.html', context)
