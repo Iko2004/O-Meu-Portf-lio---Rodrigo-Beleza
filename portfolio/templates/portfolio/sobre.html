@@ -2,65 +2,163 @@
 {% load markdownify %}
 
 {% block content %}
+<style>
+    .makingof-card { border: none; border-radius: 25px; transition: transform 0.3s ease; background: #fff; }
+    .makingof-card:hover { transform: translateY(-8px); }
+    .badge-tech { background: #eef2ff; color: #4338ca; border: 1px solid #e0e7ff; }
+    .section-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; color: #94a3b8; font-weight: 700; margin-bottom: 8px; display: block; }
+    .content-box { background: #f8fafc; border-radius: 15px; padding: 20px; border: 1px solid #f1f5f9; height: 100%; }
+    .ia-box { background: #f0f9ff; border: 1px solid #e0f2fe; border-left: 4px solid #0ea5e9; }
+    .expandable-img { cursor: zoom-in; transition: transform 0.3s ease, box-shadow 0.3s ease; backface-visibility: hidden; transform: translateZ(0); }
+    .expandable-img:hover { transform: scale(1.02) translateZ(0); box-shadow: 0 10px 20px rgba(0,0,0,0.15) !important; }
+    .mvt-card { border: none; border-radius: 20px; background: #fff; }
+    .flow-step { border-left: 3px solid #0d6efd; padding-left: 15px; margin-bottom: 15px; }
+</style>
+
 <div class="container py-5">
-    <section class="mb-5">
-        <h2 class="fw-bold">Arquitetura MVT</h2>
-        <div class="row align-items-center">
-            <div class="col-md-6">
-                <p>O Django separa a lógica em Model (Dados), View (Lógica) e Template (Interface).</p>
-                <iframe width="100%" height="315" src="https://www.youtube.com/embed/O_TEU_VIDEO" frameborder="0" allowfullscreen></iframe>
-            </div>
-            <div class="col-md-6">
-                <img src="/static/portfolio/images/mvt_desenho.jpg" class="img-fluid rounded shadow" alt="Desenho MVT">
+    <div class="row align-items-center mb-5">
+        <div class="col-lg-8">
+            <h1 class="display-4 fw-bold">Sobre a Aplicação</h1>
+            <p class="lead text-muted">Registo detalhado da evolução técnica e decisões de arquitetura.</p>
+        </div>
+        <div class="col-lg-4 text-lg-end">
+            <a href="/media/makingof/MakingOf.pdf" download="Relatorio_MakingOf.pdf" class="btn btn-danger btn-lg rounded-pill px-4 shadow">
+                <i class="bi bi-cloud-arrow-down-fill me-2"></i>Transferir Relatório
+            </a>
+        </div>
+    </div>
+
+    <div class="mb-5 pb-3 border-bottom">
+        <h6 class="text-primary fw-bold text-uppercase ls-2 mb-2">Fundamentos Técnicos</h6>
+        <h1 class="display-5 fw-bold text-dark mb-0">1. Arquitetura MVT do Django</h1>
+        <p class="text-muted lead mt-2">O ciclo de vida completo de um pedido, desde o browser até à base de dados.</p>
+    </div>
+
+    <div class="row g-5 mb-5">
+        <div class="col-lg-5">
+            <div class="card mvt-card shadow-sm p-3 h-100">
+                <h5 class="fw-bold mb-3 text-center">Esquema da Arquitetura</h5>
+                <a data-bs-toggle="modal" data-bs-target="#modalMVT" style="display: block;">
+                    <img src="/media/makingof/ArquiteturaMVTdoDjango.jpg" alt="Desenho MVT Django" class="img-fluid rounded-4 shadow-sm w-100 expandable-img" style="object-fit: cover;">
+                </a>
             </div>
         </div>
-    </section>
 
-    <section class="mb-5">
-        <h2 class="fw-bold mb-4">Tecnologias</h2>
-        
-        {% regroup tecnologias by tipo.nome|default:"Sem Categoria" as tecnologias_por_tipo %}
-        
-        <div class="row g-4">
-            {% for grupo in tecnologias_por_tipo %}
-                <div class="col-12 mt-4">
-                    <h4 class="text-primary fw-bold border-bottom pb-2">{{ grupo.grouper }}</h4>
+        <div class="col-lg-7">
+            <div class="card mvt-card shadow-sm p-4 p-lg-5 h-100">
+                <h4 class="fw-bold mb-4">Componentes e Fluxo de Informação</h4>
+                
+                <div class="flow-step">
+                    <h6 class="fw-bold text-dark mb-1">1. Browser & URL Dispatcher</h6>
+                    <p class="small text-muted mb-0">Tudo começa com um <strong>HTTP Request</strong> enviado pelo browser. O <code>urls.py</code> faz o <em>URL match</em> para saber qual a rota pedida e passa o pedido pela <strong>Middleware Stack</strong>.</p>
+                </div>
+
+                <div class="flow-step">
+                    <h6 class="fw-bold text-dark mb-1">2. View (O Controlador Central)</h6>
+                    <p class="small text-muted mb-0">O <code>views.py</code> recebe o pedido. Se houver formulários (<code>forms.py</code>), processa a <em>form data</em>. De seguida, faz uma <em>query</em> ao Model para obter os dados necessários e prepara o <em>Context</em> para enviar ao Template.</p>
+                </div>
+
+                <div class="flow-step border-success">
+                    <h6 class="fw-bold text-dark mb-1">3. Model & Base de Dados</h6>
+                    <p class="small text-muted mb-0">O <code>models.py</code> interage com a <strong>Django ORM</strong>. A QuerySet API converte os pedidos Python em <strong>SQL</strong> para ler ou gravar na <strong>Database (SQLite)</strong>. O Django Admin também interage diretamente aqui fazendo operações CRUD.</p>
+                </div>
+
+                <div class="flow-step border-warning mb-0">
+                    <h6 class="fw-bold text-dark mb-1">4. Template Engine & Response</h6>
+                    <p class="small text-muted mb-0">O Template Engine (DTL) recebe o Contexto da View, renderiza o ficheiro <strong>HTML</strong> e injeta os <strong>Static Files</strong>. O resultado final volta pela View e é entregue ao Browser como um <strong>HTTP Response</strong>.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="card mvt-card shadow-sm p-4 p-lg-5 bg-dark text-white">
+                <div class="text-center mb-4">
+                    <i class="bi bi-youtube text-danger display-4 mb-3"></i>
+                    <h3 class="fw-bold">Vídeo-Tutorial: Criar um Novo Projeto</h3>
+                    <p class="text-light opacity-75">Demonstração prática da arquitetura em funcionamento, explicando a criação e funcionamento do formulário de submissão.</p>
                 </div>
                 
-                {% for tech in grupo.list %}
-                <div class="col-md-4">
-                    <div class="card h-100 shadow-sm border-0 rounded-4">
-                        <div class="card-body">
-                            <div class="d-flex align-items-center mb-3">
-                                {% if tech.logo %}
-                                    <img src="{{ tech.logo.url }}" alt="{{ tech.nome }}" width="30" height="30" class="me-3 object-fit-contain">
-                                {% else %}
-                                    <i class="bi bi-cpu fs-3 text-muted me-3"></i>
-                                {% endif %}
-                                <h5 class="fw-bold mb-0">{{ tech.nome }}</h5>
-                            </div>
-                            <p class="small text-muted mb-0">{{ tech.detalhes|default:"Sem descrição disponível." }}</p>
+                <div class="row justify-content-center">
+                    <div class="col-lg-10">
+                        <div class="ratio ratio-16x9 rounded-4 overflow-hidden shadow-lg border border-secondary">
+                            <iframe src="https://youtu.be/RrtZWGnhpWM" title="Vídeo Tutorial Django" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
                         </div>
                     </div>
                 </div>
-                {% endfor %}
-                
-            {% empty %}
-                <div class="col-12">
-                    <p class="text-muted">Ainda não existem tecnologias registadas no sistema.</p>
-                </div>
-            {% endfor %}
-        </div>
-    </section>
-
-    <section>
-        <h2 class="fw-bold">Making-Of</h2>
-        {% for log in makingofs %}
-            <div class="border-start border-4 border-primary ps-4 mb-4">
-                <h5>{{ log.titulo }}</h5>
-                <div>{{ log.descricao|markdownify }}</div>
             </div>
-        {% endfor %}
-    </section>
+        </div>
+    </div>
+
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm rounded-4 p-4 p-lg-5 bg-white">
+                <div class="row align-items-center">
+                    <div class="col-lg-8">
+                        <div class="d-flex align-items-center mb-3">
+                            <i class="bi bi-github fs-1 text-dark me-3"></i>
+                            <h2 class="fw-bold mb-0">Repositório GitHub</h2>
+                        </div>
+                        <p class="text-muted mb-4">
+                            O controlo de versões foi uma peça central no desenvolvimento desta aplicação. Utilizei o <strong>Git</strong> localmente para registar o histórico de alterações e o <strong>GitHub</strong> como plataforma remota.
+                        </p>
+                        <h5 class="fw-bold text-dark mb-2">Vantagens no Desenvolvimento de Software:</h5>
+                        <ul class="text-muted small mb-4">
+                            <li class="mb-2"><strong>Histórico Seguro:</strong> Permite reverter o código para estados anteriores caso ocorram erros, garantindo que nada se perde.</li>
+                            <li class="mb-2"><strong>Colaboração e Organização:</strong> Facilita o trabalho em equipa e a experimentação segura através de <em>branches</em> (ramificações) sem interferir com o código principal.</li>
+                            <li><strong>Acessibilidade e Integração:</strong> O código fica protegido na cloud e acessível em qualquer lugar, facilitando também futuras implementações de CI/CD (Integração e Entrega Contínuas).</li>
+                        </ul>
+                        <a href="https://github.com/RodrigoBeleza10/O-Meu-Portf-lio---Rodrigo-Beleza.git" target="_blank" class="btn btn-dark rounded-pill px-4 shadow-sm">
+                            <i class="bi bi-box-arrow-up-right me-2"></i>Ver Repositório
+                        </a>
+                    </div>
+                    <div class="col-lg-4 text-center mt-4 mt-lg-0">
+                        <i class="bi bi-git text-secondary" style="font-size: 8rem; opacity: 0.1;"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm rounded-4 p-4 p-lg-5 bg-white">
+                <div class="row align-items-center">
+                    <div class="col-lg-8">
+                        <div class="d-flex align-items-center mb-3">
+                            <i class="bi bi-journal-code fs-1 text-primary me-3"></i>
+                            <h2 class="fw-bold mb-0">Página de Making Of</h2>
+                        </div>
+                        <p class="text-muted mb-4">
+                            Acompanhe todos os registos detalhados sobre as decisões técnicas, justificações de modelação e integração de Inteligência Artificial ao longo do desenvolvimento deste projeto.
+                        </p>
+                        <a href="{% url 'makingofs' %}" class="btn btn-primary rounded-pill px-4 shadow-sm">
+                            <i class="bi bi-arrow-right-circle me-2"></i>Aceder ao Making Of
+                        </a>
+                    </div>
+                    <div class="col-lg-4 text-center mt-4 mt-lg-0">
+                        <i class="bi bi-journal-text text-primary" style="font-size: 8rem; opacity: 0.1;"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="modal fade" id="modalMVT" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content bg-transparent border-0">
+            <div class="modal-header border-0 pb-0 justify-content-end">
+                <button type="button" class="btn btn-dark rounded-circle shadow d-flex align-items-center justify-content-center" data-bs-dismiss="modal" aria-label="Fechar" style="width: 45px; height: 45px; z-index: 10;">
+                    <i class="bi bi-x-lg fs-5 text-white"></i>
+                </button>
+            </div>
+            <div class="modal-body text-center pt-0">
+                <img src="/media/makingof/ArquiteturaMVTdoDjango.jpg" class="img-fluid rounded-4 shadow-lg bg-white p-2" alt="Esboço MVT Expandido">
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}
