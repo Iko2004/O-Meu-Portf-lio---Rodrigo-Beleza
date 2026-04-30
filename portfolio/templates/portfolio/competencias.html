@@ -77,10 +77,15 @@
         {% for competencia in competencias %}
         <div class="col-md-6 col-lg-4">
             <div class="card skill-card shadow-sm p-4 text-center h-100">
-                <div class="crud-overlay">
-                    <a href="{% url 'editar_competencia' competencia.id %}" class="btn-mini-crud btn-edit"><i class="bi bi-pencil-fill"></i></a>
-                    <a href="{% url 'eliminar_competencia' competencia.id %}" class="btn-mini-crud btn-delete" onclick="return confirm('Apagar competência?')"><i class="bi bi-trash3-fill"></i></a>
-                </div>
+                
+                {% if request.user.is_authenticated %}
+                    {% if request.user.is_superuser or request.user.groups.all.0.name == 'gestor-portfolio' %}
+                    <div class="crud-overlay">
+                        <a href="{% url 'editar_competencia' competencia.id %}" class="btn-mini-crud btn-edit"><i class="bi bi-pencil-fill"></i></a>
+                        <a href="{% url 'eliminar_competencia' competencia.id %}" class="btn-mini-crud btn-delete" onclick="return confirm('Apagar competência?')"><i class="bi bi-trash3-fill"></i></a>
+                    </div>
+                    {% endif %}
+                {% endif %}
 
                 <div class="card-body pt-4">
                     <p class="text-primary fw-bold small text-uppercase mb-1">{{ competencia.categoria }}</p>
@@ -91,46 +96,60 @@
                 </div>
             </div>
         </div>
+        {% empty %}
+        <div class="col-12 text-center py-5">
+            <div class="p-5 bg-light rounded-5 text-muted shadow-sm">
+                <i class="bi bi-shield-lock fs-1 mb-3"></i>
+                <h5>Nenhuma competência registada</h5>
+                {% if request.user.is_authenticated and request.user.groups.all.0.name == 'gestor-portfolio' or request.user.is_superuser %}
+                    <p>Usa o botão azul para adicionar a tua primeira expertise.</p>
+                {% endif %}
+            </div>
+        </div>
         {% endfor %}
     </div>
 </div>
 
-<button class="btn-add-float" data-bs-toggle="modal" data-bs-target="#modalAddSkill">
-    <i class="bi bi-plus-lg fs-2"></i>
-</button>
+{% if request.user.is_authenticated %}
+    {% if request.user.is_superuser or request.user.groups.all.0.name == 'gestor-portfolio' %}
+    <button class="btn-add-float" data-bs-toggle="modal" data-bs-target="#modalAddSkill">
+        <i class="bi bi-plus-lg fs-2"></i>
+    </button>
 
-<div class="modal fade" id="modalAddSkill" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content rounded-5 border-0 shadow-lg p-4">
-            <div class="modal-header border-0 pb-0">
-                <h5 class="fw-bold">Nova Competência</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+    <div class="modal fade" id="modalAddSkill" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content rounded-5 border-0 shadow-lg p-4">
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="fw-bold">Nova Competência</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="modal-body py-4">
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold text-muted ms-2">Nome</label>
+                            <input type="text" name="nome" class="form-control rounded-pill p-3 bg-light border-0" placeholder="Ex: Python" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold text-muted ms-2">Categoria</label>
+                            <input type="text" name="categoria" class="form-control rounded-pill p-3 bg-light border-0" placeholder="Ex: Programação">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold text-muted ms-2">Nível</label>
+                            <select name="nivel" class="form-select rounded-pill p-3 bg-light border-0">
+                                <option value="Iniciante">Iniciante</option>
+                                <option value="Intermédio">Intermédio</option>
+                                <option value="Avançado">Avançado</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer border-0 pt-0">
+                        <button type="submit" class="btn btn-primary rounded-pill px-5 shadow-sm">Adicionar Expertise</button>
+                    </div>
+                </form>
             </div>
-            <form method="POST">
-                {% csrf_token %}
-                <div class="modal-body py-4">
-                    <div class="mb-3">
-                        <label class="form-label small fw-bold text-muted ms-2">Nome</label>
-                        <input type="text" name="nome" class="form-control rounded-pill p-3 bg-light border-0" placeholder="Ex: Python" required>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label small fw-bold text-muted ms-2">Categoria</label>
-                        <input type="text" name="categoria" class="form-control rounded-pill p-3 bg-light border-0" placeholder="Ex: Programação">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label small fw-bold text-muted ms-2">Nível</label>
-                        <select name="nivel" class="form-select rounded-pill p-3 bg-light border-0">
-                            <option value="Iniciante">Iniciante</option>
-                            <option value="Intermédio">Intermédio</option>
-                            <option value="Avançado">Avançado</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="modal-footer border-0 pt-0">
-                    <button type="submit" class="btn btn-primary rounded-pill px-5 shadow-sm">Adicionar Expertise</button>
-                </div>
-            </form>
         </div>
     </div>
-</div>
+    {% endif %}
+{% endif %}
 {% endblock %}

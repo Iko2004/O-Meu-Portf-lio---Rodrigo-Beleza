@@ -28,6 +28,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     
     path('', include('portfolio.urls')),
+
+    path('accounts/', include('accounts.urls')), 
 ]
 
 # Serve ficheiros media em DEBUG

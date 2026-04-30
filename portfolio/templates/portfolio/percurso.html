@@ -56,14 +56,18 @@
                 <div class="col-lg-8 mx-auto text-center">
                     <div class="card journey-card shadow rounded-5 p-4 p-lg-5">
                         
-                        <div class="crud-actions-academic">
-                            <a href="{% url 'editar_formacao' formacao.id %}" class="btn-crud-academic btn-edit">
-                                <i class="bi bi-pencil-fill"></i>
-                            </a>
-                            <a href="{% url 'eliminar_formacao' formacao.id %}" class="btn-crud-academic btn-delete" onclick="return confirm('Apagar este registo?')">
-                                <i class="bi bi-trash3-fill"></i>
-                            </a>
-                        </div>
+                        {% if request.user.is_authenticated %}
+                            {% if request.user.is_superuser or request.user.groups.all.0.name == 'gestor-portfolio' %}
+                            <div class="crud-actions-academic">
+                                <a href="{% url 'editar_formacao' formacao.id %}" class="btn-crud-academic btn-edit">
+                                    <i class="bi bi-pencil-fill"></i>
+                                </a>
+                                <a href="{% url 'eliminar_formacao' formacao.id %}" class="btn-crud-academic btn-delete" onclick="return confirm('Apagar este registo?')">
+                                    <i class="bi bi-trash3-fill"></i>
+                                </a>
+                            </div>
+                            {% endif %}
+                        {% endif %}
 
                         <div class="card-body">
                             <span class="badge bg-primary rounded-pill mb-3 px-3">Formação</span>
@@ -94,60 +98,68 @@
         </div>
         {% empty %}
         <div class="col-12 text-center py-5">
-            <p class="text-muted">Ainda não há registos no percurso. Adiciona o primeiro!</p>
+            {% if request.user.is_authenticated and request.user.groups.all.0.name == 'gestor-portfolio' or request.user.is_superuser %}
+                <p class="text-muted">Ainda não há registos no percurso. Adiciona o primeiro!</p>
+            {% else %}
+                <p class="text-muted">De momento não existem registos no percurso.</p>
+            {% endif %}
         </div>
         {% endfor %}
     </div>
 </div>
 
-<button class="btn-add-float" data-bs-toggle="modal" data-bs-target="#modalAddAcademic" title="Novo Registo">
-    <i class="bi bi-plus-lg fs-2"></i>
-</button>
+{% if request.user.is_authenticated %}
+    {% if request.user.is_superuser or request.user.groups.all.0.name == 'gestor-portfolio' %}
+    <button class="btn-add-float" data-bs-toggle="modal" data-bs-target="#modalAddAcademic" title="Novo Registo">
+        <i class="bi bi-plus-lg fs-2"></i>
+    </button>
 
-<div class="modal fade" id="modalAddAcademic" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content rounded-5 border-0 shadow-lg p-4">
-            <div class="modal-header border-0">
-                <h5 class="fw-bold">Novo Registo Académico</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            
-            <form method="POST" action="{% url 'percurso' %}">
-                {% csrf_token %}
-                <div class="modal-body">
-                    <div class="row g-3">
-                        <div class="col-md-6">
-                            <input type="text" name="designacao" class="form-control rounded-pill p-3 bg-light border-0" placeholder="Designação do Curso/Cargo" required>
-                        </div>
-                        <div class="col-md-6">
-                            <input type="text" name="instituicao" class="form-control rounded-pill p-3 bg-light border-0" placeholder="Instituição/Empresa" required>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="small fw-bold text-muted ms-2 mb-1">Data Início</label>
-                            <input type="date" name="data_inicio" class="form-control rounded-pill p-3 bg-light border-0" required>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="small fw-bold text-muted ms-2 mb-1">Data Fim (Opcional)</label>
-                            <input type="date" name="data_fim" class="form-control rounded-pill p-3 bg-light border-0">
-                        </div>
-                        <div class="col-12">
-                            <textarea name="descricao" class="form-control rounded-4 p-3 bg-light border-0" rows="3" placeholder="Breve descrição..."></textarea>
-                        </div>
-                        <div class="col-12">
-                            <label class="small fw-bold text-muted ms-2 mb-1">Competências Adquiridas (Ctrl+Click)</label>
-                            <select name="competencias_adquiridas" class="form-select rounded-4 p-3 bg-light border-0" multiple size="4">
-                                {% for comp in todas_competencias %}
-                                    <option value="{{ comp.id }}">{{ comp.nome }} ({{ comp.nivel }})</option>
-                                {% endfor %}
-                            </select>
+    <div class="modal fade" id="modalAddAcademic" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content rounded-5 border-0 shadow-lg p-4">
+                <div class="modal-header border-0">
+                    <h5 class="fw-bold">Novo Registo Académico</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                
+                <form method="POST" action="{% url 'percurso' %}">
+                    {% csrf_token %}
+                    <div class="modal-body">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <input type="text" name="designacao" class="form-control rounded-pill p-3 bg-light border-0" placeholder="Designação do Curso/Cargo" required>
+                            </div>
+                            <div class="col-md-6">
+                                <input type="text" name="instituicao" class="form-control rounded-pill p-3 bg-light border-0" placeholder="Instituição/Empresa" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="small fw-bold text-muted ms-2 mb-1">Data Início</label>
+                                <input type="date" name="data_inicio" class="form-control rounded-pill p-3 bg-light border-0" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="small fw-bold text-muted ms-2 mb-1">Data Fim (Opcional)</label>
+                                <input type="date" name="data_fim" class="form-control rounded-pill p-3 bg-light border-0">
+                            </div>
+                            <div class="col-12">
+                                <textarea name="descricao" class="form-control rounded-4 p-3 bg-light border-0" rows="3" placeholder="Breve descrição..."></textarea>
+                            </div>
+                            <div class="col-12">
+                                <label class="small fw-bold text-muted ms-2 mb-1">Competências Adquiridas (Ctrl+Click)</label>
+                                <select name="competencias_adquiridas" class="form-select rounded-4 p-3 bg-light border-0" multiple size="4">
+                                    {% for comp in todas_competencias %}
+                                        <option value="{{ comp.id }}">{{ comp.nome }} ({{ comp.nivel }})</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="modal-footer border-0">
-                    <button type="submit" class="btn btn-primary rounded-pill px-5 shadow-sm">Adicionar Registo</button>
-                </div>
-            </form>
+                    <div class="modal-footer border-0">
+                        <button type="submit" class="btn btn-primary rounded-pill px-5 shadow-sm">Adicionar Registo</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
-</div>
+    {% endif %}
+{% endif %}
 {% endblock %}

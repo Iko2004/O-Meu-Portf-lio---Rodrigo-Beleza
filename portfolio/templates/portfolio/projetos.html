@@ -112,14 +112,18 @@
         <div class="col-lg-6">
             <div class="card project-card rounded-5 shadow-sm">
                 
-                <div class="crud-actions">
-                    <a href="{% url 'editar_projeto' projeto.id %}" class="btn-crud btn-edit" title="Editar">
-                        <i class="bi bi-pencil-fill"></i>
-                    </a>
-                    <a href="{% url 'eliminar_projeto' projeto.id %}" class="btn-crud btn-delete" title="Eliminar" onclick="return confirm('Tens a certeza que queres apagar este projeto?')">
-                        <i class="bi bi-trash3-fill"></i>
-                    </a>
-                </div>
+                {% if request.user.is_authenticated %}
+                    {% if request.user.is_superuser or request.user.groups.all.0.name == 'gestor-portfolio' %}
+                    <div class="crud-actions">
+                        <a href="{% url 'editar_projeto' projeto.id %}" class="btn-crud btn-edit" title="Editar">
+                            <i class="bi bi-pencil-fill"></i>
+                        </a>
+                        <a href="{% url 'eliminar_projeto' projeto.id %}" class="btn-crud btn-delete" title="Eliminar" onclick="return confirm('Tens a certeza que queres apagar este projeto?')">
+                            <i class="bi bi-trash3-fill"></i>
+                        </a>
+                    </div>
+                    {% endif %}
+                {% endif %}
 
                 {% if projeto.imagem %}
                     <img src="{{ projeto.imagem.url }}" alt="{{ projeto.titulo }}" class="project-image">
@@ -159,90 +163,98 @@
             <div class="p-5 bg-light rounded-5 text-muted shadow-sm">
                 <i class="bi bi-folder-x fs-1 mb-3"></i>
                 <h5>Nenhum Projeto Encontrado</h5>
-                <p>Usa o botão azul no canto para adicionares o teu primeiro projeto!</p>
+                {% if request.user.is_authenticated and request.user.groups.all.0.name == 'gestor-portfolio' or request.user.is_superuser %}
+                    <p>Usa o botão azul no canto para adicionares o teu primeiro projeto!</p>
+                {% else %}
+                    <p>De momento não existem projetos para apresentar.</p>
+                {% endif %}
             </div>
         </div>
         {% endfor %}
     </div>
 </div>
 
-<button class="btn-add-float" data-bs-toggle="modal" data-bs-target="#modalAddProject" title="Novo Projeto">
-    <i class="bi bi-plus-lg fs-3"></i>
-</button>
+{% if request.user.is_authenticated %}
+    {% if request.user.is_superuser or request.user.groups.all.0.name == 'gestor-portfolio' %}
+    <button class="btn-add-float" data-bs-toggle="modal" data-bs-target="#modalAddProject" title="Novo Projeto">
+        <i class="bi bi-plus-lg fs-3"></i>
+    </button>
 
-<div class="modal fade" id="modalAddProject" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content rounded-5 border-0 shadow-lg p-3">
-            <div class="modal-header border-0 pb-0">
-                <h5 class="modal-title fw-bold fs-4">Novo Projeto</h5>
-                <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal"></button>
-            </div>
-            
-            <form method="POST" action="{% url 'projetos' %}" enctype="multipart/form-data">
-                {% csrf_token %}
-                <div class="modal-body py-4">
-                    <div class="row g-3">
-                        <div class="col-md-6">
-                            <label class="form-label small fw-bold text-muted ms-2">Título do Projeto</label>
-                            <input type="text" name="titulo" class="form-control form-control-lg rounded-pill px-4 bg-light border-0" required>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label small fw-bold text-muted ms-2">Unidade Curricular (UC)</label>
-                            <select name="uc" class="form-select form-select-lg rounded-pill px-4 bg-light border-0">
-                                <option value="">Nenhuma / Pessoal</option>
-                                {% for uc in todas_ucs %}
-                                    <option value="{{ uc.id }}">{{ uc.nome }}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
+    <div class="modal fade" id="modalAddProject" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content rounded-5 border-0 shadow-lg p-3">
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title fw-bold fs-4">Novo Projeto</h5>
+                    <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal"></button>
+                </div>
+                
+                <form method="POST" action="{% url 'projetos' %}" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="modal-body py-4">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label small fw-bold text-muted ms-2">Título do Projeto</label>
+                                <input type="text" name="titulo" class="form-control form-control-lg rounded-pill px-4 bg-light border-0" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label small fw-bold text-muted ms-2">Unidade Curricular (UC)</label>
+                                <select name="uc" class="form-select form-select-lg rounded-pill px-4 bg-light border-0">
+                                    <option value="">Nenhuma / Pessoal</option>
+                                    {% for uc in todas_ucs %}
+                                        <option value="{{ uc.id }}">{{ uc.nome }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
 
-                        <div class="col-md-6">
-                            <label class="form-label small fw-bold text-muted ms-2">Link GitHub</label>
-                            <input type="url" name="link_github" class="form-control form-control-lg rounded-pill px-4 bg-light border-0" placeholder="https://github.com/...">
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label small fw-bold text-muted ms-2">Vídeo Demo (URL)</label>
-                            <input type="url" name="video_demo" class="form-control form-control-lg rounded-pill px-4 bg-light border-0">
-                        </div>
+                            <div class="col-md-6">
+                                <label class="form-label small fw-bold text-muted ms-2">Link GitHub</label>
+                                <input type="url" name="link_github" class="form-control form-control-lg rounded-pill px-4 bg-light border-0" placeholder="https://github.com/...">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label small fw-bold text-muted ms-2">Vídeo Demo (URL)</label>
+                                <input type="url" name="video_demo" class="form-control form-control-lg rounded-pill px-4 bg-light border-0">
+                            </div>
 
-                        <div class="col-12">
-                            <label class="form-label small fw-bold text-muted ms-2">Descrição</label>
-                            <textarea name="descricao" class="form-control rounded-4 p-3 bg-light border-0" rows="3" required></textarea>
-                        </div>
-                        <div class="col-12">
-                            <label class="form-label small fw-bold text-muted ms-2">Conceitos Aplicados</label>
-                            <textarea name="conceitos_aplicados" class="form-control rounded-4 p-3 bg-light border-0" rows="2"></textarea>
-                        </div>
+                            <div class="col-12">
+                                <label class="form-label small fw-bold text-muted ms-2">Descrição</label>
+                                <textarea name="descricao" class="form-control rounded-4 p-3 bg-light border-0" rows="3" required></textarea>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label small fw-bold text-muted ms-2">Conceitos Aplicados</label>
+                                <textarea name="conceitos_aplicados" class="form-control rounded-4 p-3 bg-light border-0" rows="2"></textarea>
+                            </div>
 
-                        <div class="col-md-6">
-                            <label class="form-label small fw-bold text-muted ms-2">Tecnologias (Ctrl+Clique para várias)</label>
-                            <select name="tecnologias" class="form-select rounded-4 bg-light border-0" multiple size="4">
-                                {% for tech in todas_tecnologias %}
-                                    <option value="{{ tech.id }}">{{ tech.nome }}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label small fw-bold text-muted ms-2">Competências (Ctrl+Clique para várias)</label>
-                            <select name="competencias" class="form-select rounded-4 bg-light border-0" multiple size="4">
-                                {% for comp in todas_competencias %}
-                                    <option value="{{ comp.id }}">{{ comp.nome }}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
+                            <div class="col-md-6">
+                                <label class="form-label small fw-bold text-muted ms-2">Tecnologias (Ctrl+Clique para várias)</label>
+                                <select name="tecnologias" class="form-select rounded-4 bg-light border-0" multiple size="4">
+                                    {% for tech in todas_tecnologias %}
+                                        <option value="{{ tech.id }}">{{ tech.nome }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label small fw-bold text-muted ms-2">Competências (Ctrl+Clique para várias)</label>
+                                <select name="competencias" class="form-select rounded-4 bg-light border-0" multiple size="4">
+                                    {% for comp in todas_competencias %}
+                                        <option value="{{ comp.id }}">{{ comp.nome }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
 
-                        <div class="col-12 mt-3">
-                            <label class="form-label small fw-bold text-muted ms-2">Imagem de Capa</label>
-                            <input type="file" name="imagem" class="form-control form-control-lg rounded-pill px-4 bg-light border-0" accept="image/*">
+                            <div class="col-12 mt-3">
+                                <label class="form-label small fw-bold text-muted ms-2">Imagem de Capa</label>
+                                <input type="file" name="imagem" class="form-control form-control-lg rounded-pill px-4 bg-light border-0" accept="image/*">
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="modal-footer border-0 pt-0">
-                    <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="submit" class="btn btn-primary rounded-pill px-4 shadow-sm">Criar Projeto</button>
-                </div>
-            </form>
+                    <div class="modal-footer border-0 pt-0">
+                        <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary rounded-pill px-4 shadow-sm">Criar Projeto</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
-</div>
+    {% endif %}
+{% endif %}
 {% endblock %}

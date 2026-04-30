@@ -41,7 +41,13 @@ INSTALLED_APPS = [
     'escola',
     'professor',
     'markdownify.apps.MarkdownifyConfig',
+    'accounts',
 ]
+
+
+LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = 'home' 
+LOGOUT_REDIRECT_URL = 'login'
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",

@@ -1,5 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Tecnologia, Licenciatura, Formacao, MakingOf, Projeto, Competencia, UnidadeCurricular, Tipo
+from django.contrib.auth.decorators import login_required
+
 
 # ==========================================
 # PÁGINAS PRINCIPAIS
@@ -10,6 +12,7 @@ def home_view(request):
 def contactos_view(request):
     return render(request, 'portfolio/contactos.html')
 
+@login_required
 def makingofs_view(request):
     makingofs = MakingOf.objects.all().order_by('-id') 
     return render(request, 'portfolio/makingofs.html', {'makingofs': makingofs})
@@ -17,6 +20,8 @@ def makingofs_view(request):
 # ==========================================
 # TECNOLOGIAS (CRUD)
 # ==========================================
+
+@login_required
 def tecnologias_view(request):
     if request.method == "POST":
         nome = request.POST.get('nome')
@@ -58,6 +63,7 @@ def eliminar_tecnologia(request, id):
 # ==========================================
 # PROJETOS (CRUD)
 # ==========================================
+@login_required
 def projetos_view(request):
     if request.method == "POST":
         projeto = Projeto.objects.create(
@@ -121,6 +127,8 @@ def eliminar_projeto(request, id):
 # ==========================================
 # PERCURSO ACADÉMICO / FORMAÇÕES (CRUD)
 # ==========================================
+
+@login_required
 def percurso_view(request):
     if request.method == "POST":
         formacao = Formacao.objects.create(
@@ -166,6 +174,8 @@ def eliminar_formacao(request, id):
 # ==========================================
 # COMPETÊNCIAS (CRUD)
 # ==========================================
+
+@login_required
 def competencias_view(request):
     if request.method == "POST":
         Competencia.objects.create(
@@ -192,7 +202,7 @@ def eliminar_competencia(request, id):
     return redirect('competencias')
 
 
-
+@login_required
 def sobre_view(request):
     tecnologias = Tecnologia.objects.all().order_by('tipo__nome', 'nome')
     makingofs = MakingOf.objects.all().order_by('-id')
@@ -202,3 +212,5 @@ def sobre_view(request):
         'makingofs': makingofs,
     }
     return render(request, 'portfolio/sobre.html', context)
+
+

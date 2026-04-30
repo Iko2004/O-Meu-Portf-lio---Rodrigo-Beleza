@@ -17,7 +17,6 @@
         box-shadow: 0 15px 30px rgba(13, 110, 253, 0.5);
     }
 
-
     .tech-card {
         transition: all 0.4s ease;
         background: #ffffff;
@@ -67,9 +66,13 @@
             <h1 class="display-4 fw-bold mb-0">Tecnologias</h1>
         </div>
         
-        <button class="btn btn-primary btn-add-header" data-bs-toggle="modal" data-bs-target="#modalAddTech" title="Adicionar Tecnologia">
-            <i class="bi bi-plus-lg fs-3"></i>
-        </button>
+        {% if request.user.is_authenticated %}
+            {% if request.user.is_superuser or request.user.groups.all.0.name == 'gestor-portfolio' %}
+            <button class="btn btn-primary btn-add-header" data-bs-toggle="modal" data-bs-target="#modalAddTech" title="Adicionar Tecnologia">
+                <i class="bi bi-plus-lg fs-3"></i>
+            </button>
+            {% endif %}
+        {% endif %}
     </div>
 
     <div class="row g-4">
@@ -94,14 +97,18 @@
                             ID: #{{ tecnologia.id }}
                         </span>
                         
-                        <div class="d-flex gap-2">
-                            <a href="{% url 'editar_tecnologia' tecnologia.id %}" class="action-btn btn-edit shadow-sm" title="Editar">
-                                <i class="bi bi-pencil-fill"></i>
-                            </a>
-                            <a href="{% url 'eliminar_tecnologia' tecnologia.id %}" class="action-btn btn-delete shadow-sm" title="Eliminar" onclick="return confirm('Tens a certeza que queres apagar {{ tecnologia.nome }}?');">
-                                <i class="bi bi-trash3-fill"></i>
-                            </a>
-                        </div>
+                        {% if request.user.is_authenticated %}
+                            {% if request.user.is_superuser or request.user.groups.all.0.name == 'gestor-portfolio' %}
+                            <div class="d-flex gap-2">
+                                <a href="{% url 'editar_tecnologia' tecnologia.id %}" class="action-btn btn-edit shadow-sm" title="Editar">
+                                    <i class="bi bi-pencil-fill"></i>
+                                </a>
+                                <a href="{% url 'eliminar_tecnologia' tecnologia.id %}" class="action-btn btn-delete shadow-sm" title="Eliminar" onclick="return confirm('Tens a certeza que queres apagar {{ tecnologia.nome }}?');">
+                                    <i class="bi bi-trash3-fill"></i>
+                                </a>
+                            </div>
+                            {% endif %}
+                        {% endif %}
                     </div>
 
                 </div>
@@ -112,63 +119,71 @@
             <div class="p-5 bg-light rounded-5 text-muted shadow-sm border">
                 <i class="bi bi-cpu-fill fs-1 mb-3 text-secondary opacity-50"></i>
                 <h5 class="fw-bold">Nenhuma tecnologia encontrada</h5>
-                <p>Clica no botão azul flutuante no canto inferior direito para adicionar a tua primeira tecnologia.</p>
+                {% if request.user.is_authenticated and request.user.groups.all.0.name == 'gestor-portfolio' or request.user.is_superuser %}
+                    <p>Clica no botão azul no topo para adicionar a tua primeira tecnologia.</p>
+                {% else %}
+                    <p>De momento não existem tecnologias listadas.</p>
+                {% endif %}
             </div>
         </div>
         {% endfor %}
     </div>
 </div>
 
-<div class="modal fade" id="modalAddTech" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content rounded-5 border-0 shadow-lg p-3">
-            <div class="modal-header border-0 pb-0">
-                <h5 class="modal-title fw-bold fs-4">Nova Tecnologia</h5>
-                <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal"></button>
-            </div>
-            
-            <form method="POST" action="{% url 'tecnologias' %}" enctype="multipart/form-data">
-                {% csrf_token %}
-                <div class="modal-body py-4">
-                    <div class="row g-3">
-                        <div class="col-md-8">
-                            <label class="form-label small fw-bold text-muted ms-2">Nome</label>
-                            <input type="text" name="nome" class="form-control form-control-lg rounded-pill px-4 bg-light border-0" required>
-                        </div>
-                        
-                        <div class="col-md-4">
-                            <label class="form-label small fw-bold text-muted ms-2">Interesse</label>
-                            <select name="nivel_interesse" class="form-select form-select-lg rounded-pill px-4 bg-light border-0">
-                                <option value="5">5</option>
-                                <option value="4">4</option>
-                                <option value="3">3</option>
-                                <option value="2">2</option>
-                                <option value="1">1</option>
-                            </select>
-                        </div>
+{% if request.user.is_authenticated %}
+    {% if request.user.is_superuser or request.user.groups.all.0.name == 'gestor-portfolio' %}
+    <div class="modal fade" id="modalAddTech" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content rounded-5 border-0 shadow-lg p-3">
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title fw-bold fs-4">Nova Tecnologia</h5>
+                    <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal"></button>
+                </div>
+                
+                <form method="POST" action="{% url 'tecnologias' %}" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="modal-body py-4">
+                        <div class="row g-3">
+                            <div class="col-md-8">
+                                <label class="form-label small fw-bold text-muted ms-2">Nome</label>
+                                <input type="text" name="nome" class="form-control form-control-lg rounded-pill px-4 bg-light border-0" required>
+                            </div>
+                            
+                            <div class="col-md-4">
+                                <label class="form-label small fw-bold text-muted ms-2">Interesse</label>
+                                <select name="nivel_interesse" class="form-select form-select-lg rounded-pill px-4 bg-light border-0">
+                                    <option value="5">5</option>
+                                    <option value="4">4</option>
+                                    <option value="3">3</option>
+                                    <option value="2">2</option>
+                                    <option value="1">1</option>
+                                </select>
+                            </div>
 
-                        <div class="col-12">
-                            <label class="form-label small fw-bold text-muted ms-2">Link Oficial</label>
-                            <input type="url" name="link_oficial" class="form-control form-control-lg rounded-pill px-4 bg-light border-0">
-                        </div>
+                            <div class="col-12">
+                                <label class="form-label small fw-bold text-muted ms-2">Link Oficial</label>
+                                <input type="url" name="link_oficial" class="form-control form-control-lg rounded-pill px-4 bg-light border-0">
+                            </div>
 
-                        <div class="col-12">
-                            <label class="form-label small fw-bold text-muted ms-2">Detalhes</label>
-                            <textarea name="detalhes" class="form-control rounded-4 p-3 bg-light border-0" rows="3"></textarea>
-                        </div>
+                            <div class="col-12">
+                                <label class="form-label small fw-bold text-muted ms-2">Detalhes</label>
+                                <textarea name="detalhes" class="form-control rounded-4 p-3 bg-light border-0" rows="3"></textarea>
+                            </div>
 
-                        <div class="col-12 mt-3">
-                            <label class="form-label small fw-bold text-muted ms-2">Logo (Imagem)</label>
-                            <input type="file" name="logo" class="form-control form-control-lg rounded-pill px-4 bg-light border-0" accept="image/*">
+                            <div class="col-12 mt-3">
+                                <label class="form-label small fw-bold text-muted ms-2">Logo (Imagem)</label>
+                                <input type="file" name="logo" class="form-control form-control-lg rounded-pill px-4 bg-light border-0" accept="image/*">
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="modal-footer border-0 pt-0">
-                    <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="submit" class="btn btn-primary rounded-pill px-4 shadow-sm">Adicionar Tecnologia</button>
-                </div>
-            </form>
+                    <div class="modal-footer border-0 pt-0">
+                        <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary rounded-pill px-4 shadow-sm">Adicionar Tecnologia</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
-</div>
+    {% endif %}
+{% endif %}
 {% endblock %}
